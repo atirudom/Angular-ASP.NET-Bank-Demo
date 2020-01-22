@@ -1,5 +1,5 @@
 # RMIT Course: Web Development Technologies
-Assignment #1: RMIT course: Web devlopment technologies | Assignment #2: ASP.NET Core Internet Banking website with .NET Core
+Assignment #2: ASP.NET Core Internet Banking website with .NET Core
 
 ## Members
 The enslaved (team) members responsible for the delivery of the project are as follows:
