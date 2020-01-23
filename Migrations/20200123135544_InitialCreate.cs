@@ -30,7 +30,7 @@ namespace Assignment2.Migrations
                 columns: table => new
                 {
                     CustomerID = table.Column<int>(nullable: false),
-                    CustomerName = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
                     TFN = table.Column<string>(maxLength: 11, nullable: true),
                     Address = table.Column<string>(maxLength: 50, nullable: true),
                     City = table.Column<string>(maxLength: 40, nullable: true),
@@ -65,7 +65,8 @@ namespace Assignment2.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    AccountNumber = table.Column<int>(nullable: false),
+                    AccountNumber = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     AccountType = table.Column<int>(maxLength: 1, nullable: false),
                     CustomerID = table.Column<int>(nullable: false),
                     Balance = table.Column<decimal>(type: "money", nullable: false),
