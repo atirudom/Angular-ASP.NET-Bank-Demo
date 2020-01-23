@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
+using SimpleHashing;
+using Microsoft.AspNetCore.Http;
+using Assignment2.Attributes;
 
 namespace Assignment2.Controllers
 {
@@ -24,6 +27,27 @@ namespace Assignment2.Controllers
         {
             var mainContext = _context.Logins.Include(l => l.Customer);
             return View(await mainContext.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(string userID, string password)
+        {
+            Customer loggedInCustomer = await Authentication.AuthenticateAsync(_context, userID, password);
+
+            // Set session for loggedIn customer.
+            HttpContext.Session.SetInt32(nameof(Customer.CustomerID), loggedInCustomer.CustomerID);
+            HttpContext.Session.SetString(nameof(Customer.Name), loggedInCustomer.Name);
+
+            return RedirectToAction("Index", "ATM");
+        }
+
+        [Route("LogoutNow")]
+        public IActionResult Logout()
+        {
+            // Logout customer.
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Login/Details/5
@@ -120,36 +144,6 @@ namespace Assignment2.Controllers
             }
             ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "CustomerName", login.CustomerID);
             return View(login);
-        }
-
-        // GET: Login/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var login = await _context.Logins
-                .Include(l => l.Customer)
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (login == null)
-            {
-                return NotFound();
-            }
-
-            return View(login);
-        }
-
-        // POST: Login/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var login = await _context.Logins.FindAsync(id);
-            _context.Logins.Remove(login);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool LoginExists(string id)
