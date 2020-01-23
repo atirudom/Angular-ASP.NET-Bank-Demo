@@ -13,8 +13,7 @@ namespace Assignment2.Models
 
     public class Account
     {
-        //[Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1000, 9999)]
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None), Range(1000, 9999)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1, 9999)]
         [Display(Name = "Account Number")]
         public int AccountNumber { get; set; }
 
