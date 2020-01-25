@@ -9,12 +9,12 @@ namespace Assignment2.Models
 {
     public class BillPay
     {
-        [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1000, 9999)]
+        [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1, 9999)]
         public int BillPayID { get; set; }
         [Range(1000, 9999), Required]
         public int AccountNumber { get; set; }
 
-        [Range(1000, 9999), Required]
+        [Range(1, 9999), Required]
         public int PayeeID { get; set; }
 
         [Column(TypeName = "money"), Range(1, 99999999), Required]

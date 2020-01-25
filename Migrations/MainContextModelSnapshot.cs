@@ -22,7 +22,9 @@ namespace Assignment2.Migrations
             modelBuilder.Entity("Assignment2.Models.Account", b =>
                 {
                     b.Property<int>("AccountNumber")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccountType")
                         .HasColumnType("int")
@@ -90,7 +92,7 @@ namespace Assignment2.Migrations
                         .HasColumnType("nvarchar(40)")
                         .HasMaxLength(40);
 
-                    b.Property<string>("CustomerName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
