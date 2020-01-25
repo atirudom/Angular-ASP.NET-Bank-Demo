@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assignment2.CustomExceptions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -37,8 +38,8 @@ namespace Assignment2.Models
         {
             decimal newBalance = Balance + adjustedAmount;
             if (newBalance < 0) throw new BusinessRulesException("Not enough balance!");
-            if (AccountType.Equals("S") && newBalance < 0) throw new BusinessRulesException("Account Savings type balance cannot be lower than 0");
-            if (AccountType.Equals("C") && newBalance < 200) throw new BusinessRulesException("Account Checking type balance cannot be lower than 200");
+            if (AccountType == AccountType.Saving && newBalance < 0) throw new BusinessRulesException("Account Savings type balance cannot be lower than 0");
+            if (AccountType == AccountType.Checking && newBalance < 200) throw new BusinessRulesException("Account Checking type balance cannot be lower than 200");
             Balance = newBalance;
         }
     }
