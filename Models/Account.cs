@@ -32,5 +32,14 @@ namespace Assignment2.Models
         public DateTime ModifyDate { get; set; }
 
         public virtual List<Transaction> Transactions { get; set; }
+
+        public void ChangeBalance(decimal adjustedAmount)
+        {
+            decimal newBalance = Balance + adjustedAmount;
+            if (newBalance < 0) throw new BusinessRulesException("Not enough balance!");
+            if (AccountType.Equals("S") && newBalance < 0) throw new BusinessRulesException("Account Savings type balance cannot be lower than 0");
+            if (AccountType.Equals("C") && newBalance < 200) throw new BusinessRulesException("Account Checking type balance cannot be lower than 200");
+            Balance = newBalance;
+        }
     }
 }
