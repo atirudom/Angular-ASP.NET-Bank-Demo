@@ -14,7 +14,7 @@ namespace Assignment2.Models
         public int CustomerID { get; set; }
 
         [Required, StringLength(50)]
-        public string CustomerName { get; set; }
+        public string Name { get; set; }
 
         [StringLength(11)]
         public string TFN { get; set; }

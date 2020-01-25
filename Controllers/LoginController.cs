@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
+using SimpleHashing;
+using Microsoft.AspNetCore.Http;
+using Assignment2.Attributes;
 
 namespace Assignment2.Controllers
 {
@@ -26,135 +29,25 @@ namespace Assignment2.Controllers
             return View(await mainContext.ToListAsync());
         }
 
-        // GET: Login/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var login = await _context.Logins
-                .Include(l => l.Customer)
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (login == null)
-            {
-                return NotFound();
-            }
-
-            return View(login);
-        }
-
-        // GET: Login/Create
-        public IActionResult Create()
-        {
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "CustomerName");
-            return View();
-        }
-
-        // POST: Login/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerID,UserID,PasswordHash,ModifyDate")] Login login)
+        public async Task<IActionResult> Login(string userID, string password)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(login);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "CustomerName", login.CustomerID);
-            return View(login);
+            Customer loggedInCustomer = await Authentication.AuthenticateAsync(_context, userID, password);
+
+            // Set session for loggedIn customer.
+            HttpContext.Session.SetInt32(nameof(Customer.CustomerID), loggedInCustomer.CustomerID);
+            HttpContext.Session.SetString(nameof(Customer.Name), loggedInCustomer.Name);
+
+            return RedirectToAction("Index", "ATM");
         }
 
-        // GET: Login/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        [Route("LogoutNow")]
+        public IActionResult Logout()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            // Logout customer.
+            HttpContext.Session.Clear();
 
-            var login = await _context.Logins.FindAsync(id);
-            if (login == null)
-            {
-                return NotFound();
-            }
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "CustomerName", login.CustomerID);
-            return View(login);
-        }
-
-        // POST: Login/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("CustomerID,UserID,PasswordHash,ModifyDate")] Login login)
-        {
-            if (id != login.UserID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(login);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LoginExists(login.UserID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerID"] = new SelectList(_context.Customers, "CustomerID", "CustomerName", login.CustomerID);
-            return View(login);
-        }
-
-        // GET: Login/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var login = await _context.Logins
-                .Include(l => l.Customer)
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (login == null)
-            {
-                return NotFound();
-            }
-
-            return View(login);
-        }
-
-        // POST: Login/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var login = await _context.Logins.FindAsync(id);
-            _context.Logins.Remove(login);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool LoginExists(string id)
-        {
-            return _context.Logins.Any(e => e.UserID == id);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
