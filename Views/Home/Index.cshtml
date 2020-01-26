@@ -1,8 +1,33 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Login
+@{
+    ViewData["Title"] = "Login";
 }
+
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Login</h1>
+
+    <div class="row newstyle">
+        <div class="col-md-4">
+            <form asp-controller="Login" asp-action="Login">
+                <div class="form-group">
+                    <label asp-for="UserID" class="control-label"></label>
+                    <input asp-for="UserID" class="form-control" />
+                    <span asp-validation-for="UserID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Password" class="control-label">Password</label>
+                    <input id="Password" name="Password" type="password" class="form-control"
+                           data-val="true" data-val-required="The Password field is required." />
+                    @Html.ValidationMessage("Password", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </div>
+                @Html.ValidationMessage("LoginFailed", new { @class = "text-danger" })
+            </form>
+        </div>
+    </div>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
