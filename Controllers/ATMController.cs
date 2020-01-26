@@ -96,6 +96,43 @@ namespace Assignment2.Controllers
             }
         }
 
+        public async Task<IActionResult> Transfer(int id) => View(await _context.Accounts.FindAsync(id));
+
+        [HttpPost]
+        public async Task<IActionResult> Transfer(int id, int destAccountNumber, decimal amount)
+        {
+            Account account = await _context.Accounts.FindAsync(id);
+            Account destinationAccount = await _context.Accounts.FindAsync(destAccountNumber);
+
+            if (amount < 0)
+                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
+            if (amount.HasMoreThanTwoDecimalPlaces())
+                ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Amount = amount;
+                return View(account);
+            }
+
+            try
+            {
+                AccountTransferAdapter accountTransferAdapter = new AccountTransferAdapter(account, destinationAccount);
+                accountTransferAdapter.Transfer(amount);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (TransactionRuleException e)
+            {
+                ModelState.AddModelError(nameof(destAccountNumber), e.errMsg);
+                return View(account);
+            }
+            catch (BusinessRulesException e)
+            {
+                ModelState.AddModelError(nameof(amount), e.errMsg);
+                return View(account);
+            }
+        }
+
         public async Task<IActionResult> ViewTransactions(int? page = 1, string accountType = "All")
         {
             // Retrieve customer object from context
