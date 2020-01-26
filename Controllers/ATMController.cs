@@ -12,6 +12,7 @@ using Assignment2.Attributes;
 using Assignment2.Models.Adapter;
 using Assignment2.CustomExceptions;
 using Assignment2.Utils;
+using X.PagedList;
 
 namespace Assignment2.Controllers
 {
@@ -64,7 +65,10 @@ namespace Assignment2.Controllers
             }
         }
 
-        internal async Task<IActionResult> Withdraw(int id, decimal amount)
+        public async Task<IActionResult> Withdraw(int id) => View(await _context.Accounts.FindAsync(id));
+
+        [HttpPost]
+        public async Task<IActionResult> Withdraw(int id, decimal amount)
         {
             Account account = await _context.Accounts.FindAsync(id);
 
@@ -90,6 +94,34 @@ namespace Assignment2.Controllers
                 ModelState.AddModelError(nameof(amount), e.errMsg);
                 return View(account);
             }
+        }
+
+        public async Task<IActionResult> ViewTransactions(int? page = 1, string accountType = "All")
+        {
+            // Retrieve customer object from context
+            var customer = await _context.Customers.FindAsync(CustomerID);
+            ViewBag.Customer = customer;
+
+            // Page the orders, maximum of 4 per page.
+            const int pageSize = 4;
+
+            var transactions = _context.Transactions;
+            IQueryable<Transaction> resultTransactions;
+            switch (accountType)
+            {
+                case "Saving":
+                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Saving);
+                    break;
+                case "Checking":
+                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Checking);
+                    break;
+                default:
+                    resultTransactions = transactions;
+                    break;
+            }
+            var pagedList = await resultTransactions.ToPagedListAsync(page, pageSize);
+
+            return View(pagedList);
         }
     }
 }
