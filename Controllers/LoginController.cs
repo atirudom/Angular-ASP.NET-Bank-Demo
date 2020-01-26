@@ -33,7 +33,11 @@ namespace Assignment2.Controllers
         public async Task<IActionResult> Login(string userID, string password)
         {
             Customer loggedInCustomer = await Authentication.AuthenticateAsync(_context, userID, password);
-
+            if (loggedInCustomer == null)
+            {
+                ModelState.AddModelError("LoginFailed", "Login failed, please try again.");
+                return View(nameof(Index));
+            }
             // Set session for loggedIn customer.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), loggedInCustomer.CustomerID);
             HttpContext.Session.SetString(nameof(Customer.Name), loggedInCustomer.Name);

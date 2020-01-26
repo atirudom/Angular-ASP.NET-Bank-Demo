@@ -1,5 +1,6 @@
 ﻿using Assignment2.Data;
 using Assignment2.Models;
+using Microsoft.EntityFrameworkCore;
 using SimpleHashing;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace Assignment2.Attributes
     {
         public static async Task<Customer> AuthenticateAsync(MainContext context, string userID, string password)
         {
-            var login = await context.Logins.FindAsync(userID);
+            //var login = context.Logins.FirstOrDefault(x => x.UserID == userID);
+            var login = await context.Logins.FirstOrDefaultAsync(x => x.UserID == userID);
 
             // If userID is not found or password does not match
             if (login == null || !PBKDF2.Verify(login.PasswordHash, password))
@@ -21,7 +23,6 @@ namespace Assignment2.Attributes
             }
             else
             {
-
                 return login.Customer;
             }
         }
