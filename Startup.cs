@@ -28,6 +28,11 @@ namespace Assignment2
             services.AddControllersWithViews();
             services.AddDbContext<MainContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MainContext")));
+            services.AddSession(options =>
+            {
+                // Make the session cookie essential.
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,9 +50,8 @@ namespace Assignment2
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
