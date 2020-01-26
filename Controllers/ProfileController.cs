@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
+using SimpleHashing;
 
 namespace Assignment2.Controllers
 {
@@ -86,6 +87,19 @@ namespace Assignment2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
+        }
+
+        public IActionResult ChangePassword(int customerID) => View(_context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefault().UserID);
+
+        public async Task<IActionResult> ChangePassword(int userID, string newPassword)
+        {
+            Login login = await _context.Logins.FindAsync(userID);
+            login.PasswordHash = PBKDF2.Hash(newPassword, 50000, 64);
+
+            //_context.Update(login);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), login.CustomerID);
         }
 
         private bool CustomerExists(int id)
