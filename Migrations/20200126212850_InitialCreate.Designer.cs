@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment2.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20200123135544_InitialCreate")]
+    [Migration("20200126212850_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,10 +123,6 @@ namespace Assignment2.Migrations
 
             modelBuilder.Entity("Assignment2.Models.Login", b =>
                 {
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
@@ -138,9 +134,12 @@ namespace Assignment2.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
-                    b.HasKey("UserID");
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
-                    b.HasIndex("CustomerID");
+                    b.HasKey("CustomerID");
 
                     b.ToTable("Logins");
 
@@ -251,7 +250,7 @@ namespace Assignment2.Migrations
                         .IsRequired();
 
                     b.HasOne("Assignment2.Models.Account", "DestinationAccount")
-                        .WithMany()
+                        .WithMany("ReceivingTransactions")
                         .HasForeignKey("DestinationAccountNumber");
                 });
 #pragma warning restore 612, 618
