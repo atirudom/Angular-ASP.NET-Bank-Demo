@@ -131,11 +131,11 @@ namespace Assignment2.Controllers
             return View(customer);
         }
 
-        public IActionResult ChangePassword(int customerID) => View(_context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefault().UserID);
+        public IActionResult ChangePassword(int customerID) => View(_context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefault());
 
-        public async Task<IActionResult> ChangePassword(int userID, string newPassword)
+        public async Task<IActionResult> ChangePassword(int customerID, string newPassword)
         {
-            Login login = await _context.Logins.FindAsync(userID);
+            Login login = await _context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefaultAsync();
             login.PasswordHash = PBKDF2.Hash(newPassword, 50000, 64);
 
             //_context.Update(login);
