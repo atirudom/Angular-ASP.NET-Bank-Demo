@@ -11,11 +11,18 @@ namespace Assignment2.Models
     {
         [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1, 9999)]
         public int BillPayID { get; set; }
-        [Range(1000, 9999), Required]
+
+        [Range(1, 9999), Required]
         public int AccountNumber { get; set; }
+
+        [ForeignKey("AccountNumber")]
+        public virtual Account Account { get; set; }
 
         [Range(1, 9999), Required]
         public int PayeeID { get; set; }
+
+        public virtual Payee Payee { get; set; }
+
 
         [Column(TypeName = "money"), Range(1, 99999999), Required]
         public decimal Amount { get; set; }
