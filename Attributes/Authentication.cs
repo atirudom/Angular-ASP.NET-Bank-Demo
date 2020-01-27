@@ -17,7 +17,7 @@ namespace Assignment2.Attributes
             var login = await context.Logins.FirstOrDefaultAsync(x => x.UserID == userID);
 
             // If userID is not found or password does not match
-            if (login == null || !PBKDF2.Verify(login.PasswordHash, password))
+            if (login == null || password == null || !PBKDF2.Verify(login.PasswordHash, password))
             {
                 return null;
             }
