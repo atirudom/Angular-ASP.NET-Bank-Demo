@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "My Statement";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>My state page to display transaction history.</p>
+
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@model IPagedList<Transaction>
+@{
+    ViewData["Title"] = "View Orders";
+    var customer = (Customer)ViewBag.Customer;
+}
+
+@functions{
+    public string RenderTimeLocale(Transaction trans)
+    {
+        var datePatt = "dd/MM/yyyy hh:mm:ss tt";
+        return trans.TransactionTimeUtc.ToLocalTime().ToString(datePatt);
+    }
+}
+
+<div>
+    <h1>Transaction for @customer.Name, CustomerID @customer.CustomerID</h1>
+    <table class="table">
+        <tr>
+            <th>@Html.DisplayNameFor(x => x[0].TransactionID)</th>
+            <th>@Html.DisplayNameFor(x => x[0].AccountNumber)</th>
+            <th>@Html.DisplayNameFor(x => x[0].DestinationAccountNumber)</th>
+            <th>@Html.DisplayNameFor(x => x[0].Amount)</th>
+            <th>@Html.DisplayNameFor(x => x[0].TransactionType)</th>
+            <th>@Html.DisplayNameFor(x => x[0].TransactionTimeUtc)</th>
+        </tr>
+        @foreach (var trans in Model)
+        {
+            var active = trans.TransactionTimeUtc;
+    <tr>
+        <td>@Html.DisplayFor(x => trans.TransactionID)</td>
+        <td>@Html.DisplayFor(x => trans.AccountNumber)</td>
+        <td>@Html.DisplayFor(x => trans.DestinationAccountNumber)</td>
+        <td>@Html.DisplayFor(x => trans.Amount)</td>
+        <td>@Html.DisplayFor(x => trans.TransactionType)</td>
+        <td>@Html.DisplayFor(x => active, @RenderTimeLocale(trans))</td>
+    </tr>
+        }
+    </table>
+
+    @Html.PagedListPager(Model, page => Url.Action("ViewMyStatement", new { page }),
+        new PagedListRenderOptions
+            {
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" }
+        })
+</div>
