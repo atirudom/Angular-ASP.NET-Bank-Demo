@@ -8,16 +8,49 @@ using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
 using SimpleHashing;
+using X.PagedList;
+using Microsoft.AspNetCore.Http;
+using Assignment2.Attributes;
 
 namespace Assignment2.Controllers
 {
+    [AuthorizeCustomer]
     public class ProfileController : Controller
     {
         private readonly MainContext _context;
+        private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
         public ProfileController(MainContext context)
         {
             _context = context;
+        }
+
+        public async Task<IActionResult> ViewMyStatement(int? page = 1, string accountType = "All")
+        {
+            // Retrieve customer object from context
+            var customer = await _context.Customers.FindAsync(CustomerID);
+            ViewBag.Customer = customer;
+
+            // Page the orders, maximum of 4 per page.
+            const int pageSize = 4;
+
+            var transactions = _context.Transactions;
+            IQueryable<Transaction> resultTransactions;
+            switch (accountType)
+            {
+                case "Saving":
+                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Saving);
+                    break;
+                case "Checking":
+                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Checking);
+                    break;
+                default:
+                    resultTransactions = transactions;
+                    break;
+            }
+            var pagedList = await resultTransactions.ToPagedListAsync(page, pageSize);
+
+            return View(pagedList);
         }
 
         // GET: Profile/Details/5

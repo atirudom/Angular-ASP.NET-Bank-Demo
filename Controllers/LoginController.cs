@@ -22,12 +22,7 @@ namespace Assignment2.Controllers
             _context = context;
         }
 
-        // GET: Login
-        public async Task<IActionResult> Index()
-        {
-            var mainContext = _context.Logins.Include(l => l.Customer);
-            return View(await mainContext.ToListAsync());
-        }
+        public IActionResult Login() => View();
 
         [HttpPost]
         public async Task<IActionResult> Login(string userID, string password)
@@ -36,7 +31,7 @@ namespace Assignment2.Controllers
             if (loggedInCustomer == null)
             {
                 ModelState.AddModelError("LoginFailed", "Login failed, please try again.");
-                return View(nameof(Index));
+                return View(new Login { UserID = userID });
             }
             // Set session for loggedIn customer.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), loggedInCustomer.CustomerID);
