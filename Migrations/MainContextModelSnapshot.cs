@@ -248,7 +248,7 @@ namespace Assignment2.Migrations
                         .IsRequired();
 
                     b.HasOne("Assignment2.Models.Account", "DestinationAccount")
-                        .WithMany()
+                        .WithMany("ReceivingTransactions")
                         .HasForeignKey("DestinationAccountNumber");
                 });
 #pragma warning restore 612, 618
