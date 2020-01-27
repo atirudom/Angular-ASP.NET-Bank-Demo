@@ -22,7 +22,8 @@ namespace Assignment2.Controllers
         // GET: BillPay
         public async Task<IActionResult> Index()
         {
-            return View(await _context.BillPays.ToListAsync());
+            var mainContext = _context.BillPays.Include(b => b.Account).Include(b => b.Payee);
+            return View(await mainContext.ToListAsync());
         }
 
         // GET: BillPay/Details/5
@@ -34,6 +35,8 @@ namespace Assignment2.Controllers
             }
 
             var billPay = await _context.BillPays
+                .Include(b => b.Account)
+                .Include(b => b.Payee)
                 .FirstOrDefaultAsync(m => m.BillPayID == id);
             if (billPay == null)
             {
@@ -46,6 +49,8 @@ namespace Assignment2.Controllers
         // GET: BillPay/Create
         public IActionResult Create()
         {
+            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber");
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName");
             return View();
         }
 
@@ -62,6 +67,8 @@ namespace Assignment2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber", billPay.AccountNumber);
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName", billPay.PayeeID);
             return View(billPay);
         }
 
@@ -78,6 +85,8 @@ namespace Assignment2.Controllers
             {
                 return NotFound();
             }
+            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber", billPay.AccountNumber);
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName", billPay.PayeeID);
             return View(billPay);
         }
 
@@ -113,6 +122,8 @@ namespace Assignment2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber", billPay.AccountNumber);
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName", billPay.PayeeID);
             return View(billPay);
         }
 
@@ -125,6 +136,8 @@ namespace Assignment2.Controllers
             }
 
             var billPay = await _context.BillPays
+                .Include(b => b.Account)
+                .Include(b => b.Payee)
                 .FirstOrDefaultAsync(m => m.BillPayID == id);
             if (billPay == null)
             {
