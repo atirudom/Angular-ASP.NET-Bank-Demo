@@ -1,71 +1,37 @@
-﻿@model IEnumerable<Assignment2.Models.Customer>
-
+﻿@model Customer
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Accounts";
 }
 
-<h1>Index</h1>
+    <div>
+        <h1 class="display-4">Welcome, @Model.Name</h1>
+        <h1 class="display-5">ATM</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TFN)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PostCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TFN)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PostCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CustomerID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CustomerID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CustomerID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <h3>Your Accounts</h3>
+        <table class="table">
+            <tr>
+                <th scope="col">@Html.DisplayNameFor(x => x.Accounts[0].AccountNumber)</th>
+                <th scope="col">@Html.DisplayNameFor(x => x.Accounts[0].AccountType)</th>
+                <th scope="col">@Html.DisplayNameFor(x => x.Accounts[0].Balance)</th>
+                <th scope="col">Your Actions</th>
+            </tr>
+            @foreach (var account in Model.Accounts)
+            {
+                <tr>
+                    <td class="align-middle">@Html.DisplayFor(x => account.AccountNumber)</td>
+                    <td class="align-middle">@Html.DisplayFor(x => account.AccountType)</td>
+                    <td class="align-middle">@Html.DisplayFor(x => account.Balance)</td>
+                    <td class="align-middle">
+                        <a class="btn btn-primary select-account-action-btn"
+                           asp-action="Deposit" asp-route-id="@account.AccountNumber">Deposit</a>
+                        <a class="btn btn-primary select-account-action-btn"
+                           asp-action="Withdraw" asp-route-id="@account.AccountNumber">Withdraw</a>
+                        <a class="btn btn-primary select-account-action-btn"
+                           asp-action="TransferToOther" asp-route-id="@account.AccountNumber">Transfer to other</a>
+                        <a class="btn btn-primary select-account-action-btn"
+                           asp-action="TransferBetweenAccounts" asp-route-id="@account.AccountNumber">Transfer between accounts</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
