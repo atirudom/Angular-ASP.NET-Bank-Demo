@@ -46,5 +46,14 @@ namespace Assignment2.Models
             if (AccountType == AccountType.Checking && newBalance < 200) throw new BusinessRulesException("Account Checking type balance cannot be lower than 200");
             Balance = newBalance;
         }
+
+        public List<Transaction> GetAllTransactions()
+        {
+            List<Transaction> resultTransactions = new List<Transaction>();
+            resultTransactions.AddRange(Transactions);
+            resultTransactions.AddRange(ReceivingTransactions);
+
+            return resultTransactions;
+        }
     }
 }

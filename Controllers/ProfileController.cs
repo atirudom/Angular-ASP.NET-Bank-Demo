@@ -29,13 +29,19 @@ namespace Assignment2.Controllers
         {
             // Retrieve customer object from context
             var customer = await _context.Customers.FindAsync(CustomerID);
+            List<Account> accounts = customer.Accounts;
             ViewBag.Customer = customer;
 
             // Page the orders, maximum of 4 per page.
             const int pageSize = 4;
 
-            var transactions = _context.Transactions;
-            IQueryable<Transaction> resultTransactions;
+            List<Transaction> transactions = new List<Transaction>();
+            accounts.ForEach(account =>
+            {
+                transactions.AddRange(account.GetAllTransactions());
+            });
+            transactions.OrderByDescending(x => x.TransactionTimeUtc);
+            IEnumerable<Transaction> resultTransactions;
             switch (accountType)
             {
                 case "Saving":
@@ -48,7 +54,11 @@ namespace Assignment2.Controllers
                     resultTransactions = transactions;
                     break;
             }
-            var pagedList = await resultTransactions.ToPagedListAsync(page, pageSize);
+            // Sort DateTime descending
+            List<Transaction> tmpTransactions = resultTransactions.ToList();
+            //tmpTransactions.Sort((x, y) => DateTime.Compare(y.TransactionTimeUtc, x.TransactionTimeUtc));
+
+            var pagedList = await tmpTransactions.ToPagedListAsync((int)page, pageSize);
 
             return View(pagedList);
         }
