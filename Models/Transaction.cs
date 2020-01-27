@@ -22,10 +22,16 @@ namespace Assignment2.Models
 
         [Range(1000,9999), Required]
         public int AccountNumber { get; set; }
+
+        [ForeignKey("AccountNumber")]
+        [InverseProperty("Transactions")]
         public virtual Account Account { get; set; }
 
-        [ForeignKey("DestinationAccount"), Range(1000, 9999, ErrorMessage = "CustomerID must be 4 digits")]
+        [Range(1000, 9999, ErrorMessage = "CustomerID must be 4 digits")]
         public int? DestinationAccountNumber { get; set; }
+
+        [ForeignKey("DestinationAccountNumber")]
+        [InverseProperty("ReceivingTransactions")]
         public virtual Account DestinationAccount { get; set; }
 
         [Column(TypeName = "money"), Range(1, 99999999)]
