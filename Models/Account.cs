@@ -32,7 +32,11 @@ namespace Assignment2.Models
         [Required]
         public DateTime ModifyDate { get; set; }
 
+        [InverseProperty("Account")]
         public virtual List<Transaction> Transactions { get; set; }
+
+        [InverseProperty("DestinationAccount")]
+        public virtual List<Transaction> ReceivingTransactions { get; set; }
 
         public void ChangeBalance(decimal adjustedAmount)
         {
