@@ -67,7 +67,7 @@ namespace Assignment2.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                id = CustomerID;
             }
 
             var customer = await _context.Customers
