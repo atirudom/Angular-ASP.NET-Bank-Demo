@@ -28,6 +28,7 @@ namespace Assignment2.Controllers
         }
 
         // GET: Customer
+        [Route("/ATM")]
         public async Task<IActionResult> Index()
         {
             var customer = await _context.Customers.FindAsync(CustomerID);
