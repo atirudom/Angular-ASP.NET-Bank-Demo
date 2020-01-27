@@ -3,7 +3,37 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>My state page to display transaction history.</p>
+<div class="col-md-10">
+    <h6>Choose your account type: </h6>
+    @Html.DropDownList("Sortby", new SelectListItem[]
+    {
+     new SelectListItem() { Text = "Savings", Value = "Saving" },
+     new SelectListItem() { Text = "Checking", Value = "Checking" }},
+         new
+         {
+             @onchange = "callChangefunc(this.value)"
+         });
+
+    <script>function callChangefunc(val) {
+            window.location.href = "/Profile/ViewMyStement?accountType=" + val;
+        }</script>
+
+    @Html.DropDownList("Sortby", new SelectListItem[]
+                {
+     new SelectListItem() { Text = "Savings", Value = "Saving" },
+     new SelectListItem() { Text = "Checking", Value = "Checking" }},
+                     new
+                     {
+                         @onchange = "callChangefunc(this.value)"
+                     })
+
+    <script>function callChangefunc(val) {
+            window.location.href = "/Profile/ViewMyStatement?accountType=" + val;
+        }</script>
+    <span>The transaction history for your selected account will displayed.</span>
+    <br />
+    <br />
+</div>
 
 @using X.PagedList
 @using X.PagedList.Mvc.Core
@@ -36,21 +66,21 @@
         @foreach (var trans in Model)
         {
             var active = trans.TransactionTimeUtc;
-    <tr>
-        <td>@Html.DisplayFor(x => trans.TransactionID)</td>
-        <td>@Html.DisplayFor(x => trans.AccountNumber)</td>
-        <td>@Html.DisplayFor(x => trans.DestinationAccountNumber)</td>
-        <td>@Html.DisplayFor(x => trans.Amount)</td>
-        <td>@Html.DisplayFor(x => trans.TransactionType)</td>
-        <td>@Html.DisplayFor(x => active, @RenderTimeLocale(trans))</td>
-    </tr>
+            <tr>
+                <td>@Html.DisplayFor(x => trans.TransactionID)</td>
+                <td>@Html.DisplayFor(x => trans.AccountNumber)</td>
+                <td>@Html.DisplayFor(x => trans.DestinationAccountNumber)</td>
+                <td>@Html.DisplayFor(x => trans.Amount)</td>
+                <td>@Html.DisplayFor(x => trans.TransactionType)</td>
+                <td>@Html.DisplayFor(x => active, @RenderTimeLocale(trans))</td>
+            </tr>
         }
     </table>
 
     @Html.PagedListPager(Model, page => Url.Action("ViewMyStatement", new { page }),
-        new PagedListRenderOptions
+            new PagedListRenderOptions
             {
-            LiElementClasses = new[] { "page-item" },
-            PageClasses = new[] { "page-link" }
-        })
+                LiElementClasses = new[] { "page-item" },
+                PageClasses = new[] { "page-link" }
+            })
 </div>

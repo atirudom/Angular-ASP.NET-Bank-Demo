@@ -18,3 +18,12 @@
 .select-account-action-btn {
     margin-right: 5px;
 }
+
+.text-dark {
+    color: #1b6ec2!important;
+}
+.pb-3 {
+    background: #f6f7f8!important;
+    border-radius: 20px;
+    padding: 2%;
+}
