@@ -40,7 +40,6 @@ namespace Assignment2.Controllers
             {
                 transactions.AddRange(account.GetAllTransactions());
             });
-            transactions.OrderByDescending(x => x.TransactionTimeUtc);
             IEnumerable<Transaction> resultTransactions;
             switch (accountType)
             {
@@ -56,7 +55,7 @@ namespace Assignment2.Controllers
             }
             // Sort DateTime descending
             List<Transaction> tmpTransactions = resultTransactions.ToList();
-            //tmpTransactions.Sort((x, y) => DateTime.Compare(y.TransactionTimeUtc, x.TransactionTimeUtc));
+            tmpTransactions.Sort((x, y) => DateTime.Compare(y.TransactionTimeUtc, x.TransactionTimeUtc));
 
             var pagedList = await tmpTransactions.ToPagedListAsync((int)page, pageSize);
 
