@@ -15,6 +15,7 @@ namespace Assignment2.Models.Adapter
         private decimal TransferServiceFee = 0.2m;
         private Account RootAccount;
         private Account DestinationAccount;
+        private Transaction Transaction;
 
         // Set root account and destination account on creating with constructor
         public AccountTransferAdapter(Account rootAccount, Account destinationAccount)
@@ -26,7 +27,7 @@ namespace Assignment2.Models.Adapter
         }
 
         // Transfer between accounts set in this adapter
-        internal void Transfer(decimal amount)
+        private void Transfer(decimal amount)
         {
             if (amount <= 0) throw new BusinessRulesException("Amount cannot be lower than 0!");
 
@@ -47,12 +48,14 @@ namespace Assignment2.Models.Adapter
                 RootAccount.Transactions.Add(feeTransaction);
             }
 
-            // Generate transaction
-            Transaction transaction = TransactionFactory.GenerateTransaction(RootAccount.AccountNumber, DestinationAccount.AccountNumber, TransactionType.Transfer, amount);
-
             // Add transaction
-            RootAccount.Transactions.Add(transaction);
-            DestinationAccount.Transactions.Add(transaction);
+            RootAccount.Transactions.Add(Transaction);
+
+            // Remove to avoid Save changes glitch where account ant Destination becomes the same
+            DestinationAccount.ReceivingTransactions.Add(Transaction);
+
+            Transaction.DestinationAccount = DestinationAccount;
+            Transaction.Account = RootAccount;
         }
 
         // This method return the amount of transferring service fees incurred in the action
@@ -69,6 +72,16 @@ namespace Assignment2.Models.Adapter
             }
             if (allowedNumOfFreeTransactions <= 0) incurredFee += TransferServiceFee;
             return incurredFee;
+        }
+
+        internal void CreateTransferTransaction(decimal amount, string comment)
+        {
+            Transaction = TransactionFactory.GenerateTransaction(RootAccount.AccountNumber, DestinationAccount.AccountNumber, TransactionType.Transfer, amount, comment);
+        }
+
+        internal void ExecuteTransferTransaction()
+        {
+            Transfer(Transaction.Amount);
         }
     }
 }
