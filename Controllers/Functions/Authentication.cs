@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Attributes
+namespace Assignment2.Controllers.Functions
 {
     public class Authentication
     {
