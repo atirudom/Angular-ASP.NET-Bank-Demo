@@ -10,6 +10,7 @@ using Assignment2.Models;
 using SimpleHashing;
 using Microsoft.AspNetCore.Http;
 using Assignment2.Attributes;
+using Assignment2.Controllers.Functions;
 
 namespace Assignment2.Controllers
 {
@@ -22,8 +23,9 @@ namespace Assignment2.Controllers
             _context = context;
         }
 
-        public IActionResult Login() => View();
+        public IActionResult Index() => View();
 
+        [Route("/Login")]
         [HttpPost]
         public async Task<IActionResult> Login(string userID, string password)
         {
@@ -31,7 +33,7 @@ namespace Assignment2.Controllers
             if (loggedInCustomer == null)
             {
                 ModelState.AddModelError("LoginFailed", "Login failed, please try again.");
-                return View(new Login { UserID = userID });
+                return View(nameof(Index), new Login { UserID = userID });
             }
             // Set session for loggedIn customer.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), loggedInCustomer.CustomerID);
@@ -46,7 +48,7 @@ namespace Assignment2.Controllers
             // Logout customer.
             HttpContext.Session.Clear();
 
-            return RedirectToAction("Index", "Home");
+            return View(nameof(Index));
         }
     }
 }

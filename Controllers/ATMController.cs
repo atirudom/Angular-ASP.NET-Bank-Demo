@@ -114,6 +114,7 @@ namespace Assignment2.Controllers
             return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferToOther));
         }
 
+        // Transfer method. TODO: Should be separated
         public async Task<IActionResult> Transfer(int id, int destAccountNumber, decimal amount, string comment, string actionOrigin)
         {
             Account account = await _context.Accounts.FindAsync(id);
