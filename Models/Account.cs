@@ -38,6 +38,8 @@ namespace Assignment2.Models
         [InverseProperty("DestinationAccount")]
         public virtual List<Transaction> ReceivingTransactions { get; set; }
 
+        public virtual List<BillPay> BillPays { get; set; }
+
         public void ChangeBalance(decimal adjustedAmount)
         {
             decimal newBalance = Balance + adjustedAmount;

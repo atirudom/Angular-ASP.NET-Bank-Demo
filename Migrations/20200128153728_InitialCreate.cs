@@ -8,24 +8,6 @@ namespace Assignment2.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "BillPays",
-                columns: table => new
-                {
-                    BillPayID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountNumber = table.Column<int>(nullable: false),
-                    PayeeID = table.Column<int>(nullable: false),
-                    Amount = table.Column<decimal>(type: "money", nullable: false),
-                    ScheduleDate = table.Column<DateTime>(nullable: false),
-                    Period = table.Column<string>(nullable: false),
-                    ModifyDate = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BillPays", x => x.BillPayID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
@@ -107,6 +89,36 @@ namespace Assignment2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BillPays",
+                columns: table => new
+                {
+                    BillPayID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountNumber = table.Column<int>(nullable: false),
+                    PayeeID = table.Column<int>(nullable: false),
+                    Amount = table.Column<decimal>(type: "money", nullable: false),
+                    ScheduleDate = table.Column<DateTime>(nullable: false),
+                    Period = table.Column<int>(nullable: false),
+                    ModifyDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BillPays", x => x.BillPayID);
+                    table.ForeignKey(
+                        name: "FK_BillPays_Accounts_AccountNumber",
+                        column: x => x.AccountNumber,
+                        principalTable: "Accounts",
+                        principalColumn: "AccountNumber",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BillPays_Payees_PayeeID",
+                        column: x => x.PayeeID,
+                        principalTable: "Payees",
+                        principalColumn: "PayeeID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -143,6 +155,16 @@ namespace Assignment2.Migrations
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BillPays_AccountNumber",
+                table: "BillPays",
+                column: "AccountNumber");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BillPays_PayeeID",
+                table: "BillPays",
+                column: "PayeeID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transactions_AccountNumber",
                 table: "Transactions",
                 column: "AccountNumber");
@@ -162,10 +184,10 @@ namespace Assignment2.Migrations
                 name: "Logins");
 
             migrationBuilder.DropTable(
-                name: "Payees");
+                name: "Transactions");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Payees");
 
             migrationBuilder.DropTable(
                 name: "Accounts");

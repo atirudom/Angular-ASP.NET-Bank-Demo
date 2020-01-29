@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Assignment2.Controllers
 {
     public class BillPayController : Controller
     {
         private readonly MainContext _context;
+        private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
         public BillPayController(MainContext context)
         {
@@ -20,10 +22,12 @@ namespace Assignment2.Controllers
         }
 
         // GET: BillPay
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var mainContext = _context.BillPays.Include(b => b.Account).Include(b => b.Payee);
-            return View(await mainContext.ToListAsync());
+            List<Account> accounts = _context.Customers.FirstOrDefault(c => c.CustomerID == CustomerID).Accounts;
+            List<BillPay> billPays = accounts.SelectMany(a => a.BillPays).ToList();
+            var mainContext = billPays;
+            return View(mainContext);
         }
 
         // GET: BillPay/Details/5
@@ -49,8 +53,10 @@ namespace Assignment2.Controllers
         // GET: BillPay/Create
         public IActionResult Create()
         {
-            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber");
+            var customerAccounts = _context.Customers.FirstOrDefault(c => c.CustomerID == CustomerID).Accounts;
+            ViewData["AccountNumber"] = new SelectList(customerAccounts, "AccountNumber", "AccountNumber");
             ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName");
+            ViewData["Period"] = new SelectList(Enum.GetValues(typeof(BillPeriod)));
             return View();
         }
 
@@ -61,14 +67,17 @@ namespace Assignment2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BillPayID,AccountNumber,PayeeID,Amount,ScheduleDate,Period,ModifyDate")] BillPay billPay)
         {
+            billPay.ModifyDate = DateTime.UtcNow;
             if (ModelState.IsValid)
             {
                 _context.Add(billPay);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber", billPay.AccountNumber);
-            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName", billPay.PayeeID);
+            var customerAccounts = _context.Customers.FirstOrDefault(c => c.CustomerID == CustomerID).Accounts;
+            ViewData["AccountNumber"] = new SelectList(customerAccounts, "AccountNumber", "AccountNumber");
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName");
+            ViewData["Period"] = new SelectList(Enum.GetValues(typeof(BillPeriod)));
             return View(billPay);
         }
 
@@ -85,8 +94,10 @@ namespace Assignment2.Controllers
             {
                 return NotFound();
             }
-            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber", billPay.AccountNumber);
-            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName", billPay.PayeeID);
+            var customerAccounts = _context.Customers.FirstOrDefault(c => c.CustomerID == CustomerID).Accounts;
+            ViewData["AccountNumber"] = new SelectList(customerAccounts, "AccountNumber", "AccountNumber");
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName");
+            ViewData["Period"] = new SelectList(Enum.GetValues(typeof(BillPeriod)));
             return View(billPay);
         }
 
@@ -97,6 +108,7 @@ namespace Assignment2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BillPayID,AccountNumber,PayeeID,Amount,ScheduleDate,Period,ModifyDate")] BillPay billPay)
         {
+            billPay.ModifyDate = DateTime.UtcNow;
             if (id != billPay.BillPayID)
             {
                 return NotFound();
@@ -122,8 +134,10 @@ namespace Assignment2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountNumber"] = new SelectList(_context.Accounts, "AccountNumber", "AccountNumber", billPay.AccountNumber);
-            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName", billPay.PayeeID);
+            var customerAccounts = _context.Customers.FirstOrDefault(c => c.CustomerID == CustomerID).Accounts;
+            ViewData["AccountNumber"] = new SelectList(customerAccounts, "AccountNumber", "AccountNumber");
+            ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName");
+            ViewData["Period"] = new SelectList(Enum.GetValues(typeof(BillPeriod)));
             return View(billPay);
         }
 

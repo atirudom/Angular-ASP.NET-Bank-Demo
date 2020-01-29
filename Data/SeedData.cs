@@ -18,7 +18,7 @@ namespace Assignment2.Data
                 return; // DB has already been seeded.
 
             const string dateFormat = "dd/MM/yyyy hh:mm:ss tt";
-            DateTime now = DateTime.Now;
+            DateTime now = DateTime.UtcNow;
 
             context.Customers.AddRange(
                 new Customer

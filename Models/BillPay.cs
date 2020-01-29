@@ -7,18 +7,28 @@ using System.Threading.Tasks;
 
 namespace Assignment2.Models
 {
+    public enum BillPeriod
+    {
+        Monthly = 'M',
+        Quarterly = 'Q',
+        Annually = 'A',
+        OneOff = 'O'
+    }
+
     public class BillPay
     {
-        [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1, 9999)]
+        [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(0, 9999)]
         public int BillPayID { get; set; }
 
-        [Range(1, 9999), Required]
+        [Range(0, 9999), Required]
+        [Display(Name = "From Account Number")]
         public int AccountNumber { get; set; }
 
         [ForeignKey("AccountNumber")]
         public virtual Account Account { get; set; }
 
         [Range(1, 9999), Required]
+        [Display(Name = "To Payee")]
         public int PayeeID { get; set; }
 
         public virtual Payee Payee { get; set; }
@@ -28,10 +38,11 @@ namespace Assignment2.Models
         public decimal Amount { get; set; }
 
         [Required]
+        [Display(Name = "Schedule Date")]
         public DateTime ScheduleDate { get; set; }
 
         [Required]
-        public string Period { get; set; }
+        public BillPeriod Period { get; set; }
 
         [Required]
         public DateTime ModifyDate { get; set; }
