@@ -98,21 +98,21 @@ namespace Assignment2.Controllers
             }
         }
 
-        public async Task<IActionResult> TransferBetweenAccounts() => View(await _context.Customers.FindAsync(CustomerID));
-
-        [HttpPost]
-        public async Task<IActionResult> TransferBetweenAccounts(int id, int destAccountNumber, decimal amount, string comment)
-        {
-            return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferBetweenAccounts));
-        }
-
-        //public async Task<IActionResult> TransferToOther(int id) => View(await _context.Accounts.FindAsync(id));
+        //public async Task<IActionResult> TransferBetweenAccounts() => View(await _context.Customers.FindAsync(CustomerID));
 
         //[HttpPost]
-        //public async Task<IActionResult> TransferToOther(int id, int destAccountNumber, decimal amount, string comment)
+        ////public async Task<IActionResult> TransferBetweenAccounts(int id, int destAccountNumber, decimal amount, string comment)
         //{
-        //    return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferToOther));
+        //    return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferBetweenAccounts));
         //}
+
+        public async Task<IActionResult> TransferToOther(int id) => View(await _context.Accounts.FindAsync(id));
+
+        [HttpPost]
+        public async Task<IActionResult> TransferToOther(int id, int destAccountNumber, decimal amount, string comment)
+        {
+            return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferToOther));
+        }
 
         // Transfer method. TODO: Should be separated
         public async Task<IActionResult> Transfer(int id, int destAccountNumber, decimal amount, string comment, string actionOrigin)
