@@ -1,48 +1,32 @@
-﻿@{
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using Assignment2.ViewModels
+@model ViewMyStatementVM
+
+@{
     ViewData["Title"] = "My Statement";
 }
 <h1>@ViewData["Title"]</h1>
 
 <div class="col-md-10">
     <h6>Choose your account type: </h6>
-    @Html.DropDownList("Sortby", new SelectListItem[]
-    {
-     new SelectListItem() { Text = "Savings", Value = "Saving" },
-     new SelectListItem() { Text = "Checking", Value = "Checking" }},
-         new
-         {
-             @onchange = "callChangefunc(this.value)"
-         });
 
-    <script>function callChangefunc(val) {
-            window.location.href = "/Profile/ViewMyStement?accountType=" + val;
-        }</script>
-
-    @Html.DropDownList("Sortby", new SelectListItem[]
-                {
-     new SelectListItem() { Text = "Savings", Value = "Saving" },
-     new SelectListItem() { Text = "Checking", Value = "Checking" }},
+    @Html.DropDownListFor(m => m.SelectedAccountType, Model.AccountTypesSelectList,
                      new
                      {
                          @onchange = "callChangefunc(this.value)"
                      })
 
-    <script>function callChangefunc(val) {
+    <script>
+        function callChangefunc(val) {
             window.location.href = "/Profile/ViewMyStatement?accountType=" + val;
-        }</script>
-    <span>The transaction history for your selected account will displayed.</span>
+        }
+    </script>
+    <span>The transaction history for your selected type of accounts will be displayed.</span>
     <br />
     <br />
 </div>
-
-@using X.PagedList
-@using X.PagedList.Mvc.Core
-@using X.PagedList.Mvc.Core.Common
-@model IPagedList<Transaction>
-@{
-    ViewData["Title"] = "View Orders";
-    var customer = (Customer)ViewBag.Customer;
-}
 
 @functions{
     public string RenderTimeLocale(Transaction trans)
@@ -52,18 +36,22 @@
     }
 }
 
+@{ 
+    var customer = (Customer)ViewBag.Customer;
+}
+
 <div>
     <h1>Transaction for @customer.Name, CustomerID @customer.CustomerID</h1>
     <table class="table">
         <tr>
-            <th>@Html.DisplayNameFor(x => x[0].TransactionID)</th>
-            <th>@Html.DisplayNameFor(x => x[0].AccountNumber)</th>
-            <th>@Html.DisplayNameFor(x => x[0].DestinationAccountNumber)</th>
-            <th>@Html.DisplayNameFor(x => x[0].Amount)</th>
-            <th>@Html.DisplayNameFor(x => x[0].TransactionType)</th>
-            <th>@Html.DisplayNameFor(x => x[0].TransactionTimeUtc)</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionID)</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].AccountNumber)</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].DestinationAccountNumber)</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].Amount)</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionType)</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionTimeUtc)</th>
         </tr>
-        @foreach (var trans in Model)
+        @foreach (var trans in Model.PagedListTransactions)
         {
             var active = trans.TransactionTimeUtc;
             <tr>
@@ -77,7 +65,7 @@
         }
     </table>
 
-    @Html.PagedListPager(Model, page => Url.Action("ViewMyStatement", new { page }),
+    @Html.PagedListPager(Model.PagedListTransactions, page => Url.Action("ViewMyStatement", new { page, accountType = Model.SelectedAccountType }),
             new PagedListRenderOptions
             {
                 LiElementClasses = new[] { "page-item" },

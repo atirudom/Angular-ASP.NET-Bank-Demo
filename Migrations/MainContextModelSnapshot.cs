@@ -67,14 +67,17 @@ namespace Assignment2.Migrations
                     b.Property<int>("PayeeID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Period")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Period")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ScheduleDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("BillPayID");
+
+                    b.HasIndex("AccountNumber");
+
+                    b.HasIndex("PayeeID");
 
                     b.ToTable("BillPays");
                 });
@@ -226,6 +229,21 @@ namespace Assignment2.Migrations
                     b.HasOne("Assignment2.Models.Customer", "Customer")
                         .WithMany("Accounts")
                         .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Assignment2.Models.BillPay", b =>
+                {
+                    b.HasOne("Assignment2.Models.Account", "Account")
+                        .WithMany("BillPays")
+                        .HasForeignKey("AccountNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Assignment2.Models.Payee", "Payee")
+                        .WithMany("BillPays")
+                        .HasForeignKey("PayeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

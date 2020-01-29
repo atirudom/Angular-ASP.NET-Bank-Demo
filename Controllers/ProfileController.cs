@@ -11,6 +11,7 @@ using SimpleHashing;
 using X.PagedList;
 using Microsoft.AspNetCore.Http;
 using Assignment2.Attributes;
+using Assignment2.ViewModels;
 
 namespace Assignment2.Controllers
 {
@@ -25,7 +26,7 @@ namespace Assignment2.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> ViewMyStatement(int? page = 1, string accountType = "All")
+        public async Task<IActionResult> ViewMyStatement(int? page = 1, string accountType = "Saving")
         {
             // Retrieve customer object from context
             var customer = await _context.Customers.FindAsync(CustomerID);
@@ -35,31 +36,45 @@ namespace Assignment2.Controllers
             // Page the orders, maximum of 4 per page.
             const int pageSize = 4;
 
-            List<Transaction> transactions = new List<Transaction>();
-            accounts.ForEach(account =>
-            {
-                transactions.AddRange(account.GetAllTransactions());
-            });
-            IEnumerable<Transaction> resultTransactions;
+            List<Transaction> resultTransactions = new List<Transaction>();
+            IEnumerable<Account> matchedAccounts;
             switch (accountType)
             {
                 case "Saving":
-                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Saving);
+                    matchedAccounts = accounts.Where(x => x.AccountType == AccountType.Saving);
+                    matchedAccounts.ToList().ForEach(account =>
+                    {
+                        resultTransactions.AddRange(account.GetAllTransactions());
+                    });
                     break;
                 case "Checking":
-                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Checking);
+                    matchedAccounts = accounts.Where(x => x.AccountType == AccountType.Checking);
+                    matchedAccounts.ToList().ForEach(account =>
+                    {
+                        resultTransactions.AddRange(account.GetAllTransactions());
+                    });
                     break;
                 default:
-                    resultTransactions = transactions;
+                    accounts.ForEach(account =>
+                    {
+                        resultTransactions.AddRange(account.GetAllTransactions());
+                    });
                     break;
             }
+
             // Sort DateTime descending
             List<Transaction> tmpTransactions = resultTransactions.ToList();
             tmpTransactions.Sort((x, y) => DateTime.Compare(y.TransactionTimeUtc, x.TransactionTimeUtc));
 
             var pagedList = await tmpTransactions.ToPagedListAsync((int)page, pageSize);
 
-            return View(pagedList);
+            ViewMyStatementVM viewModel = new ViewMyStatementVM()
+            {
+                SelectedAccountType = accountType,
+                PagedListTransactions = pagedList,
+            };
+
+            return View(viewModel);
         }
 
         // GET: Profile/Details/5
@@ -126,7 +141,7 @@ namespace Assignment2.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(customer);
         }
@@ -137,9 +152,8 @@ namespace Assignment2.Controllers
         public async Task<IActionResult> ChangePassword(int? customerID, string newPassword)
         {
             Login login = await _context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefaultAsync();
-            login.PasswordHash = PBKDF2.Hash(newPassword, 50000, 64);
+            login.PasswordHash = PBKDF2.Hash(newPassword);
 
-            //_context.Update(login);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), login.CustomerID);
