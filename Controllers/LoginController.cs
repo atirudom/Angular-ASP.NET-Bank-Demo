@@ -11,6 +11,7 @@ using SimpleHashing;
 using Microsoft.AspNetCore.Http;
 using Assignment2.Attributes;
 using Assignment2.Controllers.Functions;
+using Assignment2.Persistence;
 
 namespace Assignment2.Controllers
 {
@@ -21,6 +22,8 @@ namespace Assignment2.Controllers
         public LoginController(MainContext context)
         {
             _context = context;
+            //MainPersistence.RunBillPayPersistence(context);
+            //_context.SaveChangesAsync();
         }
 
         public IActionResult Index() => View();
