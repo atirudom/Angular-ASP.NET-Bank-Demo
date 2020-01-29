@@ -23,6 +23,7 @@
             window.location.href = "/Profile/ViewMyStatement?accountType=" + val;
         }
     </script>
+    <br />
     <span>The transaction history for your selected type of accounts will be displayed.</span>
     <br />
     <br />
@@ -41,7 +42,7 @@
 }
 
 <div>
-    <h1>Transaction for @customer.Name, CustomerID @customer.CustomerID</h1>
+    <h3>Transaction for @customer.Name, CustomerID @customer.CustomerID</h3>
     <table class="table">
         <tr>
             <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionID)</th>
