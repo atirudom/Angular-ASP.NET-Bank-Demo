@@ -106,13 +106,13 @@ namespace Assignment2.Controllers
             return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferBetweenAccounts));
         }
 
-        public async Task<IActionResult> TransferToOther(int id) => View(await _context.Accounts.FindAsync(id));
+        //public async Task<IActionResult> TransferToOther(int id) => View(await _context.Accounts.FindAsync(id));
 
-        [HttpPost]
-        public async Task<IActionResult> TransferToOther(int id, int destAccountNumber, decimal amount, string comment)
-        {
-            return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferToOther));
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> TransferToOther(int id, int destAccountNumber, decimal amount, string comment)
+        //{
+        //    return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferToOther));
+        //}
 
         // Transfer method. TODO: Should be separated
         public async Task<IActionResult> Transfer(int id, int destAccountNumber, decimal amount, string comment, string actionOrigin)
