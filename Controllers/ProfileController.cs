@@ -74,6 +74,7 @@ namespace Assignment2.Controllers
             {
                 return NotFound();
             }
+            ViewData["State"] = new SelectList(Enum.GetValues(typeof(AustralianState)));
             return View(customer);
         }
 
@@ -109,6 +110,7 @@ namespace Assignment2.Controllers
                 }
                 return RedirectToAction(nameof(Details));
             }
+            ViewData["State"] = new SelectList(Enum.GetValues(typeof(AustralianState)));
             return View(customer);
         }
 
@@ -118,6 +120,14 @@ namespace Assignment2.Controllers
         public async Task<IActionResult> ChangePassword(int? customerID, string newPassword)
         {
             Login login = await _context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefaultAsync();
+
+            // Check if not old password
+            if (PBKDF2.Verify(login.PasswordHash, newPassword))
+            {
+                ModelState.AddModelError(nameof(login.PasswordHash), "New password cannot be the same the old password");
+                return View(login);
+            }
+
             login.PasswordHash = PBKDF2.Hash(newPassword);
             login.ModifyDate = DateTime.UtcNow;
 

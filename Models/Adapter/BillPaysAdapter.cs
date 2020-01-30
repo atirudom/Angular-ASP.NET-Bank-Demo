@@ -26,14 +26,22 @@ namespace Assignment2.Models.Adapter
             BillPays.ForEach(bill =>
             {
                 var now = DateTime.UtcNow;
-
                 now.AddSeconds(-now.Second);                // Ignore second
                 now.AddMilliseconds(-now.Millisecond);      // Ignore millisecond
+
+                // If bill schedule date is after now = set bill error
+                if (bill.ScheduleDate < now)
+                {
+                    bill.Status = BillStatus.Error;
+                    bill.StatusMessage = "The schedule time has passed but was not paid";
+                    return;
+                }
+
                 if (bill.Status == BillStatus.Error) return;            // Avoid error bill
-                if (bill.LastPaymentTime == now) return;    // Avoid repeated calling
+                if (bill.LastPaymentTime.IsSameMinute(now)) return;    // Avoid repeated calling
 
+                // Execute bill operation
                 var billPeriod = bill.Period;
-
                 switch (billPeriod)
                 {
                     case BillPeriod.Annually:

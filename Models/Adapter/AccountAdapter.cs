@@ -18,11 +18,14 @@ namespace Assignment2.Models.Adapter
             this.Account = account;
         }
 
-        internal void Deposit(decimal amount)
+        internal void Deposit(decimal amount) => Deposit(amount, null);
+
+        internal void Deposit(decimal amount, string comment)
         {
             if (amount <= 0) throw new BusinessRulesException("Amount cannot be lower than 1!");
             Account.ChangeBalance(amount);
             Transaction transaction = TransactionFactory.GenerateTransaction(Account.AccountNumber, TransactionType.Deposit, amount);
+            transaction.Comment = comment;
             Account.Transactions.Add(transaction);
             Console.WriteLine("\nGenerated Transaction: \n{0}", transaction);
         }
