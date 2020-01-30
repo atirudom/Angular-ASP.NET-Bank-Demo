@@ -17,12 +17,12 @@
                 <input id="FromAccountNumber" name="FromAccountNumber" class="form-control"
                        value="@Model.AccountNumber (@Model.AccountType)" disabled />
                 <div>
-                    <label for="DestAccountNumber" class="control-label">To Account Number</label>
-                    <input id="DestAccountNumber" name="DestAccountNumber" class="form-control"
-                           value="@ViewBag.DestAccountNumber"
+                    <label for="DestinationAccountNumber" class="control-label">To Account Number</label>
+                    <input id="DestinationAccountNumber" name="DestinationAccountNumber" class="form-control"
+                           value="@ViewBag.DestinationAccountNumber"
                            data-val="true" data-val-number="The To Account Number field must be a number."
                            data-val-required="The To Account Number field is required." />
-                    @Html.ValidationMessage("DestAccountNumber", new { @class = "text-danger" })
+                    @Html.ValidationMessage("DestinationAccountNumber", new { @class = "text-danger" })
                 </div>
 
                 <div>

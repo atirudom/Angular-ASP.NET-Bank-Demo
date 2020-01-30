@@ -35,13 +35,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Period" class="control-label"></label>
-                <select asp-for="Period" class="form-control"></select>
+                <select asp-for="Period" class="form-control" asp-items="ViewBag.Period"></select>
                 <span asp-validation-for="Period" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifyDate" class="control-label"></label>
-                <input asp-for="ModifyDate" class="form-control" />
-                <span asp-validation-for="ModifyDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

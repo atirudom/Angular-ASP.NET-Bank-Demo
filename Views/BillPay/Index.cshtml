@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = "Payee List";
 }
+@functions{
+    public string RenderTimeLocale(DateTime dateTime)
+    {
+        var datePatt = "dd/MM/yyyy hh:mm:ss tt";
+        return dateTime.ToLocalTime().ToString(datePatt);
+    }
+}
 
 <h3>Scheduled Payment</h3>
 
@@ -27,32 +34,40 @@
             <th>
                 @Html.DisplayNameFor(model => model.Period)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusMessage)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Account.AccountNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Payee.PayeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ScheduleDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Period)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BillPayID">Modify</a> |
-                <a asp-action="Delete" asp-route-id="@item.BillPayID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var active = item.ScheduleDate;
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Account.AccountNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Payee.PayeeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @RenderTimeLocale(item.ScheduleDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Period)
+                </td>
+                <td style="color: darkred">
+                    @Html.DisplayFor(modelItem => item.StatusMessage)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BillPayID">Modify</a> |
+                    <a asp-action="Delete" asp-route-id="@item.BillPayID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
