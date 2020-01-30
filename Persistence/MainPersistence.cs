@@ -6,41 +6,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using Assignment2.Utils;
 using Microsoft.EntityFrameworkCore;
+using Assignment2.Models.Adapter;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Assignment2.Persistence
 {
     public static class MainPersistence
     {
-        public static void RunBillPayPersistence(MainContext mainContext)
+        public static void RunBillPayPersistence(IServiceProvider service)
         {
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromSeconds(10);
+            var periodTimeSpan = TimeSpan.FromMinutes(1);
 
             // Will be executed every 1 minute
             var timer = new System.Threading.Timer((e) =>
             {
-                ExecuteBillPaySchedule(mainContext.BillPays);
-                //mainContext.SaveChangesAsync();
+                ExecuteBillPaySchedule(service);
             }, null, startTimeSpan, periodTimeSpan);
         }
 
-        private static void ExecuteBillPaySchedule(DbSet<BillPay> billPays)
+        private static void ExecuteBillPaySchedule(IServiceProvider service)
         {
-            billPays.ToList().ForEach(bill =>
-            {
-                var billPeriod = bill.Period;
-                switch (billPeriod)
-                {
-                    case BillPeriod.Annually:
-                        if (bill.ScheduleDate.IsSameMinuteInDifferentYear(DateTime.Now))
-                            break;
-                        break;
-                    case BillPeriod.Quarterly:
-                        if (bill.ScheduleDate.IsSameMinuteInDifferentQuarter(DateTime.Now))
-                            break;
-                        break;
-                }
-            });
+            var context = new MainContext(service.GetRequiredService<DbContextOptions<MainContext>>());
+
+            BillPaysAdapter billPayAdapter = new BillPaysAdapter(context.BillPays.ToList(), context);
+            billPayAdapter.ExecuteBillPaySchedule();
+
+            context.SaveChangesAsync();
         }
     }
 }

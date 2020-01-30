@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Assignment2.Data;
+using Assignment2.Persistence;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +32,10 @@ namespace Assignment2
                     logger.LogError(ex, "An error occurred seeding the DB.");
                 }
             }
+
+            // Remove this when do initial migration -> this will cause empty InitialCreate problem
+            var service = host.Services.CreateScope().ServiceProvider;
+            MainPersistence.RunBillPayPersistence(service);
 
             host.Run();
         }
