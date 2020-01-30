@@ -15,6 +15,13 @@ namespace Assignment2.Models
         OneOff = 'O'
     }
 
+    public enum BillStatus
+    {
+        Normal = 1,
+        Error = 2,
+        Paid = 3,
+    }
+
     public class BillPay
     {
         [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(0, 9999)]
@@ -27,14 +34,14 @@ namespace Assignment2.Models
         [ForeignKey("AccountNumber")]
         public virtual Account Account { get; set; }
 
-        [Range(1, 9999), Required]
+        [Range(0, 9999), Required]
         [Display(Name = "To Payee")]
         public int PayeeID { get; set; }
 
         public virtual Payee Payee { get; set; }
 
 
-        [Column(TypeName = "money"), Range(1, 99999999), Required]
+        [Column(TypeName = "money"), Range(0, 99999999), Required]
         public decimal Amount { get; set; }
 
         [Required]
@@ -43,6 +50,13 @@ namespace Assignment2.Models
 
         [Required]
         public BillPeriod Period { get; set; }
+
+        [Required]
+        public BillStatus Status { get; set; }
+
+        public string StatusMessage { get; set; }
+
+        public DateTime LastPaymentTime { get; set; }
 
         [Required]
         public DateTime ModifyDate { get; set; }

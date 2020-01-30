@@ -9,7 +9,7 @@ namespace Assignment2.Models
 {
     public class Payee
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1, 9999)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(0, 9999)]
         public int PayeeID { get; set; }
 
         [Required, StringLength(50)]

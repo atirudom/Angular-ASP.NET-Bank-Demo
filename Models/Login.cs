@@ -9,7 +9,7 @@ namespace Assignment2.Models
 {
     public class Login
     {
-        [Key, Required, Range(1, 9999)]
+        [Key, Required, Range(0, 9999)]
         [ForeignKey("Customer")]
         public int CustomerID { get; set; }
         public virtual Customer Customer { get; set; }
