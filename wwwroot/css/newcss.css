@@ -1,0 +1,29 @@
+﻿/*add new style*/
+
+.newstyle {
+    width: 100%;
+    margin-left: 33%;
+}
+.newstyle col-md-4 from-group label {
+    font: #4696E7;
+}
+.text-center {
+    background: #f6f7f8;
+    border-radius: 20px;
+    padding:2%;
+}
+.display-4 {
+    color: #3880E0;
+}
+.select-account-action-btn {
+    margin-right: 5px;
+}
+
+.text-dark {
+    color: #1b6ec2!important;
+}
+.pb-3 {
+    background: #f6f7f8!important;
+    border-radius: 20px;
+    padding: 2%;
+}

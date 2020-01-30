@@ -9,8 +9,8 @@ namespace Assignment2.Models
 {
     public class Customer
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None), Key]
-        [Range(1000, 9999, ErrorMessage = "CustomerID must be 4 digits")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Range(0, 9999, ErrorMessage = "CustomerID must be less than 4 digits")]
         public int CustomerID { get; set; }
 
         [Required, StringLength(50)]

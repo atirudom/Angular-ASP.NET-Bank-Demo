@@ -8,16 +8,39 @@ using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
 using SimpleHashing;
+using X.PagedList;
+using Microsoft.AspNetCore.Http;
+using Assignment2.Attributes;
+using Assignment2.ViewModels;
+using Assignment2.Models.Builder;
+using Assignment2.Controllers.Functions;
 
 namespace Assignment2.Controllers
 {
+    [AuthorizeCustomer]
     public class ProfileController : Controller
     {
         private readonly MainContext _context;
+        private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
 
         public ProfileController(MainContext context)
         {
             _context = context;
+        }
+
+        public async Task<IActionResult> ViewMyStatement(int? page = 1, AccountType accountType = AccountType.Saving)
+        {
+            // Retrieve customer object from context
+            var customer = await _context.Customers.FindAsync(CustomerID);
+            List<Account> accounts = customer.Accounts;
+            ViewBag.Customer = customer;
+
+            // Page the orders, maximum of 4 per page.
+            const int pageSize = 4;
+
+            ViewMyStatementVM viewModel = ViewMyStatementMediator.GenerateMyStatementViewModel(customer, accountType, (int)page, pageSize);
+
+            return View(viewModel);
         }
 
         // GET: Profile/Details/5
@@ -25,7 +48,7 @@ namespace Assignment2.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                id = CustomerID;
             }
 
             var customer = await _context.Customers
@@ -84,19 +107,20 @@ namespace Assignment2.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(customer);
         }
 
-        public IActionResult ChangePassword(int customerID) => View(_context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefault().UserID);
+        public IActionResult ChangePassword(int? customerID) => View(_context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefault());
 
-        public async Task<IActionResult> ChangePassword(int userID, string newPassword)
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(int? customerID, string newPassword)
         {
-            Login login = await _context.Logins.FindAsync(userID);
-            login.PasswordHash = PBKDF2.Hash(newPassword, 50000, 64);
+            Login login = await _context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefaultAsync();
+            login.PasswordHash = PBKDF2.Hash(newPassword);
+            login.ModifyDate = DateTime.UtcNow;
 
-            //_context.Update(login);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), login.CustomerID);

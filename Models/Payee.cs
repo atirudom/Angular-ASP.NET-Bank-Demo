@@ -9,7 +9,7 @@ namespace Assignment2.Models
 {
     public class Payee
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1, 9999)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(0, 9999)]
         public int PayeeID { get; set; }
 
         [Required, StringLength(50)]
@@ -32,5 +32,7 @@ namespace Assignment2.Models
         // incomplete format
         [Required, StringLength(15)]
         public string Phone { get; set; }
+
+        public virtual List<BillPay> BillPays { get; set; }
     }
 }

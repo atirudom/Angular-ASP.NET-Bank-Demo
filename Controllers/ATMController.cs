@@ -13,9 +13,11 @@ using Assignment2.Models.Adapter;
 using Assignment2.CustomExceptions;
 using Assignment2.Utils;
 using X.PagedList;
+using Assignment2.Controllers.Functions;
 
 namespace Assignment2.Controllers
 {
+    [AuthorizeCustomer]
     public class ATMController : Controller
     {
         private readonly MainContext _context;
@@ -27,6 +29,7 @@ namespace Assignment2.Controllers
         }
 
         // GET: Customer
+        [Route("/ATM")]
         public async Task<IActionResult> Index()
         {
             var customer = await _context.Customers.FindAsync(CustomerID);
@@ -42,7 +45,7 @@ namespace Assignment2.Controllers
             Account account = await _context.Accounts.FindAsync(id);
 
             if (amount < 0)
-                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
+                ModelState.AddModelError(nameof(amount), "Amount must not be lower than 0.");
             if (amount.HasMoreThanTwoDecimalPlaces())
                 ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
             if (!ModelState.IsValid)
@@ -51,18 +54,14 @@ namespace Assignment2.Controllers
                 return View(account);
             }
 
-            try
+            ATMMediator.Deposit(account, amount, ModelState);
+            if (!ModelState.IsValid)
             {
-                AccountAdapter accountAdapter = new AccountAdapter(account);
-                accountAdapter.Deposit(amount);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (BusinessRulesException e)
-            {
-                ModelState.AddModelError(nameof(amount), e.errMsg);
                 return View(account);
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Withdraw(int id) => View(await _context.Accounts.FindAsync(id));
@@ -73,7 +72,7 @@ namespace Assignment2.Controllers
             Account account = await _context.Accounts.FindAsync(id);
 
             if (amount < 0)
-                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
+                ModelState.AddModelError(nameof(amount), "Amount must not be lower than 0.");
             if (amount.HasMoreThanTwoDecimalPlaces())
                 ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
             if (!ModelState.IsValid)
@@ -82,83 +81,60 @@ namespace Assignment2.Controllers
                 return View(account);
             }
 
-            try
+            ATMMediator.Withdraw(account, amount, ModelState);
+            if (!ModelState.IsValid)
             {
-                AccountAdapter accountAdapter = new AccountAdapter(account);
-                accountAdapter.Withdraw(amount);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (BusinessRulesException e)
-            {
-                ModelState.AddModelError(nameof(amount), e.errMsg);
                 return View(account);
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Transfer(int id) => View(await _context.Accounts.FindAsync(id));
+        public async Task<IActionResult> TransferToOther(int id) => View(await _context.Accounts.FindAsync(id));
 
         [HttpPost]
-        public async Task<IActionResult> Transfer(int id, int destAccountNumber, decimal amount)
+        public async Task<IActionResult> TransferToOther(int id, int destinationAccountNumber, decimal amount, string comment)
         {
-            Account account = await _context.Accounts.FindAsync(id);
-            Account destinationAccount = await _context.Accounts.FindAsync(destAccountNumber);
-
-            if (amount < 0)
-                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
-            if (amount.HasMoreThanTwoDecimalPlaces())
-                ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Amount = amount;
-                return View(account);
-            }
-
-            try
-            {
-                AccountTransferAdapter accountTransferAdapter = new AccountTransferAdapter(account, destinationAccount);
-                accountTransferAdapter.Transfer(amount);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (TransactionRuleException e)
-            {
-                ModelState.AddModelError(nameof(destAccountNumber), e.errMsg);
-                return View(account);
-            }
-            catch (BusinessRulesException e)
-            {
-                ModelState.AddModelError(nameof(amount), e.errMsg);
-                return View(account);
-            }
+            return await Transfer(id, destinationAccountNumber, amount, comment, nameof(TransferToOther));
         }
 
-        public async Task<IActionResult> ViewTransactions(int? page = 1, string accountType = "All")
+        // Transfer method. TODO: Should be separated
+        // actionOrigin parameter is used in case if there is another kind of transfer in the future. Ex: transfer between accounts
+        public async Task<IActionResult> Transfer(int id, int destinationAccountNumber, decimal amount, string comment, string actionOrigin)
         {
-            // Retrieve customer object from context
-            var customer = await _context.Customers.FindAsync(CustomerID);
-            ViewBag.Customer = customer;
+            Account account = await _context.Accounts.FindAsync(id);
+            Account destinationAccount = await _context.Accounts.FindAsync(destinationAccountNumber);
 
-            // Page the orders, maximum of 4 per page.
-            const int pageSize = 4;
-
-            var transactions = _context.Transactions;
-            IQueryable<Transaction> resultTransactions;
-            switch (accountType)
+            // input validation
+            if (amount < 0)
+                ModelState.AddModelError(nameof(amount), "Amount must not be lower than 0.");
+            if (amount.HasMoreThanTwoDecimalPlaces())
+                ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
+            if (destinationAccount == null)
+                ModelState.AddModelError(nameof(destinationAccountNumber), "Account with this number is not found");
+            if (!ModelState.IsValid)
             {
-                case "Saving":
-                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Saving);
-                    break;
-                case "Checking":
-                    resultTransactions = transactions.Where(x => x.Account.AccountType == AccountType.Checking);
-                    break;
-                default:
-                    resultTransactions = transactions;
-                    break;
+                return ReturnWithError();
             }
-            var pagedList = await resultTransactions.ToPagedListAsync(page, pageSize);
 
-            return View(pagedList);
+            // operation execution
+            ATMMediator.Transfer(account, destinationAccount, amount, comment, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return ReturnWithError();
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+            // private method for repeatitive calling inside this method
+            IActionResult ReturnWithError() {
+                ViewBag.DestinationAccountNumber = destinationAccountNumber;
+                ViewBag.Amount = amount;
+                ViewBag.Comment = comment;
+                return View(actionOrigin, account);
+            }
         }
     }
 }

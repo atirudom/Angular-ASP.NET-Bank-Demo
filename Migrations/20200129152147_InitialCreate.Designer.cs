@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment2.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20200123135544_InitialCreate")]
+    [Migration("20200129152147_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,20 +63,32 @@ namespace Assignment2.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("money");
 
+                    b.Property<DateTime>("LastPaymentTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ModifyDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("PayeeID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Period")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Period")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("ScheduleDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StatusMessage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("BillPayID");
+
+                    b.HasIndex("AccountNumber");
+
+                    b.HasIndex("PayeeID");
 
                     b.ToTable("BillPays");
                 });
@@ -123,10 +135,6 @@ namespace Assignment2.Migrations
 
             modelBuilder.Entity("Assignment2.Models.Login", b =>
                 {
-                    b.Property<string>("UserID")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
@@ -138,9 +146,12 @@ namespace Assignment2.Migrations
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
 
-                    b.HasKey("UserID");
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
-                    b.HasIndex("CustomerID");
+                    b.HasKey("CustomerID");
 
                     b.ToTable("Logins");
 
@@ -233,6 +244,21 @@ namespace Assignment2.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Assignment2.Models.BillPay", b =>
+                {
+                    b.HasOne("Assignment2.Models.Account", "Account")
+                        .WithMany("BillPays")
+                        .HasForeignKey("AccountNumber")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Assignment2.Models.Payee", "Payee")
+                        .WithMany("BillPays")
+                        .HasForeignKey("PayeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Assignment2.Models.Login", b =>
                 {
                     b.HasOne("Assignment2.Models.Customer", "Customer")
@@ -251,7 +277,7 @@ namespace Assignment2.Migrations
                         .IsRequired();
 
                     b.HasOne("Assignment2.Models.Account", "DestinationAccount")
-                        .WithMany()
+                        .WithMany("ReceivingTransactions")
                         .HasForeignKey("DestinationAccountNumber");
                 });
 #pragma warning restore 612, 618
