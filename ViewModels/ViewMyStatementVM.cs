@@ -11,6 +11,7 @@ namespace Assignment2.ViewModels
 {
     public class ViewMyStatementVM
     {
+        public List<Account> Accounts { get; set; }
         public AccountType SelectedAccountType { get; set; }
         public IEnumerable<SelectListItem> AccountTypesSelectList { get; set; } =
             new SelectListItem[]

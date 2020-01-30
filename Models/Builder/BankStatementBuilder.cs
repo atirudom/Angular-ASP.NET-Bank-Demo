@@ -8,13 +8,15 @@ namespace Assignment2.Models.Builder
     public class BankStatementBuilder
     {
         private Customer Customer;
-        private List<Transaction> Transactions;
         private AccountType AccountType;
+
+        private List<Transaction> ResultTransactions;
+        private List<Account> MatchedAccounts;
 
         public BankStatementBuilder(Customer customer)
         {
             Customer = customer;
-            Transactions = new List<Transaction>();
+            ResultTransactions = new List<Transaction>();
         }
 
         public void SetAccountType(AccountType accountType)
@@ -25,18 +27,17 @@ namespace Assignment2.Models.Builder
         internal void CreateNewBankStatement()
         {
             List<Account> accounts = Customer.Accounts;
-            IEnumerable<Account> matchedAccounts;
 
-            matchedAccounts = accounts.Where(x => x.AccountType == AccountType);
-            matchedAccounts.ToList().ForEach(account =>
+            MatchedAccounts = accounts.Where(x => x.AccountType == AccountType).ToList();
+            MatchedAccounts.ForEach(account =>
             {
-                Transactions.AddRange(account.GetAllTransactions());
+                ResultTransactions.AddRange(account.GetAllTransactions());
             });
         }
 
         public void SortTransactionsByDateDESC()
         {
-            List<Transaction> transactions = Transactions;
+            List<Transaction> transactions = ResultTransactions;
 
             // Sort DateTime
             transactions.Sort((x, y) => DateTime.Compare(y.TransactionTimeUtc, x.TransactionTimeUtc));
@@ -44,7 +45,12 @@ namespace Assignment2.Models.Builder
 
         public List<Transaction> GetBankStatementTransactions()
         {
-            return Transactions;
+            return ResultTransactions;
+        }
+
+        public List<Account> GetMatchedAccounts()
+        {
+            return MatchedAccounts;
         }
     }
 }

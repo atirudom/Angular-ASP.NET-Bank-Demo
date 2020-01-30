@@ -6,7 +6,22 @@
 
 @{
     ViewData["Title"] = "My Statement";
+    var customer = (Customer)ViewBag.Customer;
 }
+@functions{
+    public string RenderTimeLocale(DateTime dateTime)
+    {
+        var datePatt = "dd/MM/yyyy hh:mm:ss tt";
+        return dateTime.ToLocalTime().ToString(datePatt);
+    }
+}
+
+<script>
+    function callChangefunc(val) {
+        window.location.href = "/Profile/ViewMyStatement?accountType=" + val;
+    }
+</script>
+
 <h1>@ViewData["Title"]</h1>
 
 <div class="col-md-10">
@@ -18,31 +33,29 @@
                          @onchange = "callChangefunc(this.value)"
                      })
 
-    <script>
-        function callChangefunc(val) {
-            window.location.href = "/Profile/ViewMyStatement?accountType=" + val;
-        }
-    </script>
     <br />
-    <span>The transaction history for your selected type of accounts will be displayed.</span>
+    <br />
+    <h3>Current Balance of the Account/s with type of @Model.SelectedAccountType</h3>
+    <table class="table">
+        <tr>
+            <th>@Html.DisplayNameFor(x => x.Accounts[0].AccountNumber)</th>
+            <th>Current Balance</th>
+        </tr>
+        @foreach (var acc in Model.Accounts)
+        {
+            <tr>
+                <th>@Html.DisplayFor(x => acc.AccountNumber)</th>
+                <td>@Html.DisplayFor(x => acc.Balance)</td>
+            </tr>
+        }
+    </table>
+
     <br />
     <br />
 </div>
 
-@functions{
-    public string RenderTimeLocale(DateTime dateTime)
-    {
-        var datePatt = "dd/MM/yyyy hh:mm:ss tt";
-        return dateTime.ToLocalTime().ToString(datePatt);
-    }
-}
-
-@{
-    var customer = (Customer)ViewBag.Customer;
-}
-
 <div>
-    <h3>Transaction for @customer.Name, CustomerID @customer.CustomerID</h3>
+    <h3>Transactions of the accounts with type of @Model.SelectedAccountType</h3>
     <table class="table">
         <tr>
             <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionID)</th>

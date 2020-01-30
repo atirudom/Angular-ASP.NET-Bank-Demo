@@ -26,5 +26,10 @@ namespace Assignment2.Models.Builder
         {
             return BankStatementBuilder.GetBankStatementTransactions();
         }
+
+        public List<Account> GetMatchedAccounts()
+        {
+            return BankStatementBuilder.GetMatchedAccounts();
+        }
     }
 }

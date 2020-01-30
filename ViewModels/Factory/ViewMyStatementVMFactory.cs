@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 
-namespace Assignment2.ViewModels
+namespace Assignment2.ViewModels.Factory
 {
     public class ViewMyStatementVMFactory
     {
@@ -19,11 +19,13 @@ namespace Assignment2.ViewModels
             bankStatementDirector.ConstructStatement();
 
             List<Transaction> resultTransactions = bankStatementDirector.GetBankStatementTransactions();
+            List<Account> resultAccounts = bankStatementDirector.GetMatchedAccounts();
 
             var pagedList = await resultTransactions.ToPagedListAsync((int)page, pageSize);
 
             ViewMyStatementVM viewModel = new ViewMyStatementVM()
             {
+                Accounts = resultAccounts,
                 SelectedAccountType = accountType,
                 PagedListTransactions = pagedList,
             };
