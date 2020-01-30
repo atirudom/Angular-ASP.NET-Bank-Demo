@@ -1,5 +1,6 @@
 ﻿using Assignment2.Models;
 using Assignment2.ViewModels;
+using Assignment2.ViewModels.Factory;
 
 namespace Assignment2.Controllers.Functions
 {
