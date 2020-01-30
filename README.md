@@ -6,6 +6,11 @@ The enslaved (team) members responsible for the delivery of the project are as f
 - Atirach Intaraudom (s3750202) - @atirudom
 - Jiahui Li (s3614541) - @CatnisLee
 
+## Design Overview (Business Objects)
+Our codes in the program was implemented using multiple design pattern and friendly approach with business objects to keep the codes and controller clean to read and easy to follow. Below are the basic approaches we used to implement in our controllers.
+- As a rough explanation, the processes in each controller are divided into 3 steps. The first step is the predefined (fixed) value and input validation step, written in the controller. The second step is the logic in the application, where most of the logic (TO BE CONTINUED) 
+
+
 ## Git Strategies
 ### Branching
 1. Always start journey by branching out from `develop` into a friendly branch name of choosing.
