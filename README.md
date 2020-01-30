@@ -15,7 +15,7 @@ However, the large controllers such as transferring money will include complex l
 
 Briefly, the processes in each controller are divided into 3 main steps. (1) The first step is the set up and input validation step written in the controller. (2) The second step is the business logics of the controller where most of the codes are hidden inside a business object which is applied in form of Mediator pattern to avoid bloating in controllers. (3) The last step contains result functions, written in the controller, which mainly commands and decides their next move after all logics in the previous step are finished ex: redirect to view, throw error, etc.
 
-We believe the step 1 and step 3 should be written in the controller because if the process is not oversized, it is more reasonable to reveal plain observable processes, such as input validation and conditional redirection process, in the controller. This is because we believe the controllers should be intuitive to read meaning that coupling design might be more preferable than cohesion when designing plain observable processes. 
+We believe the step 1 and step 3 should be written in the controller because if the process is not oversized, it is more reasonable to reveal plain observable processes, such as input validation and conditional redirection process, in the controller. This is because we believe the controllers should be intuitive to read meaning that coupling design is more preferable than cohesion when designing plain observable processes. 
 
 ### Controller Process Example
 All controllers that include This is an example of how the flow goes in the following order when user fills all inputs and click transfer money correctly. 
