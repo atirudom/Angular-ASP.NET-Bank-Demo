@@ -18,7 +18,7 @@ Briefly, the processes in each controller are divided into 3 main steps. (1) The
 We believe the step 1 and step 3 should be written in the controller because if the process is not oversized, it is more reasonable to reveal plain observable processes, such as input validation and conditional redirection process, in the controller. This is because we believe the controllers should be intuitive to read meaning that coupling design is more preferable than cohesion when designing plain observable processes. 
 
 ### Controller Process Example
-All controllers that include This is an example of how the flow goes in the following order when user fills all inputs and click transfer money correctly. 
+All controllers that include complex business logics will follow this approach. This is an example of how the flow goes in the following order when user fills all inputs and click transfer money correctly. 
 1. Start journey by calling the controller. The controller instantiates required objects and validate user input. This block of codes is written in the controller.
 2. The controller processes business logics by calling the transfer process hidden in the `Mediator Function` which is implemented in form of Mediator pattern. The `Mediator Function` then calls `AccountTransferAdapter` implemented in form of Adapter pattern to execute transferring process between the account objects. This block of codes is written in business objects.
 3. The controller checks the result of the business process from step 2 then perform final action. In this case, if the transfer was success, then the view for success is redirected to, otherwise throw error to the same page. This block of codes is written in the controller.
