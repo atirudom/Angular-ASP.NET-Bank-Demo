@@ -24,7 +24,7 @@ namespace Assignment2.Migrations
                     b.Property<int>("AccountNumber")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.AccountNumberSequence");
 
                     b.Property<int>("AccountType")
                         .HasColumnType("int")
@@ -53,7 +53,7 @@ namespace Assignment2.Migrations
                     b.Property<int>("BillPayID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.BillPaySequence");
 
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");
@@ -118,8 +118,8 @@ namespace Assignment2.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(20)")
+                    b.Property<int>("State")
+                        .HasColumnType("int")
                         .HasMaxLength(20);
 
                     b.Property<string>("TFN")
@@ -163,7 +163,7 @@ namespace Assignment2.Migrations
                     b.Property<int>("PayeeID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.PayeeSequence");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(50)")
@@ -187,8 +187,8 @@ namespace Assignment2.Migrations
                         .HasColumnType("nvarchar(10)")
                         .HasMaxLength(10);
 
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(20)")
+                    b.Property<int>("State")
+                        .HasColumnType("int")
                         .HasMaxLength(20);
 
                     b.HasKey("PayeeID");
@@ -201,7 +201,7 @@ namespace Assignment2.Migrations
                     b.Property<int>("TransactionID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValueSql("NEXT VALUE FOR shared.TransactionSequence");
 
                     b.Property<int>("AccountNumber")
                         .HasColumnType("int");

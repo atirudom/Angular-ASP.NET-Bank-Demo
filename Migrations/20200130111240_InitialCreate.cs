@@ -16,7 +16,7 @@ namespace Assignment2.Migrations
                     TFN = table.Column<string>(maxLength: 11, nullable: true),
                     Address = table.Column<string>(maxLength: 50, nullable: true),
                     City = table.Column<string>(maxLength: 40, nullable: true),
-                    State = table.Column<string>(maxLength: 20, nullable: true),
+                    State = table.Column<int>(maxLength: 20, nullable: false),
                     PostCode = table.Column<string>(maxLength: 10, nullable: true),
                     Phone = table.Column<string>(maxLength: 15, nullable: false)
                 },
@@ -29,12 +29,11 @@ namespace Assignment2.Migrations
                 name: "Payees",
                 columns: table => new
                 {
-                    PayeeID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PayeeID = table.Column<int>(nullable: false, defaultValueSql: "NEXT VALUE FOR shared.PayeeSequence"),
                     PayeeName = table.Column<string>(maxLength: 50, nullable: false),
                     Address = table.Column<string>(maxLength: 50, nullable: true),
                     City = table.Column<string>(maxLength: 40, nullable: true),
-                    State = table.Column<string>(maxLength: 20, nullable: true),
+                    State = table.Column<int>(maxLength: 20, nullable: false),
                     PostCode = table.Column<string>(maxLength: 10, nullable: true),
                     Phone = table.Column<string>(maxLength: 15, nullable: false)
                 },
@@ -47,8 +46,7 @@ namespace Assignment2.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    AccountNumber = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountNumber = table.Column<int>(nullable: false, defaultValueSql: "NEXT VALUE FOR shared.AccountNumberSequence"),
                     AccountType = table.Column<int>(maxLength: 1, nullable: false),
                     CustomerID = table.Column<int>(nullable: false),
                     Balance = table.Column<decimal>(type: "money", nullable: false),
@@ -92,8 +90,7 @@ namespace Assignment2.Migrations
                 name: "BillPays",
                 columns: table => new
                 {
-                    BillPayID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BillPayID = table.Column<int>(nullable: false, defaultValueSql: "NEXT VALUE FOR shared.BillPaySequence"),
                     AccountNumber = table.Column<int>(nullable: false),
                     PayeeID = table.Column<int>(nullable: false),
                     Amount = table.Column<decimal>(type: "money", nullable: false),
@@ -125,8 +122,7 @@ namespace Assignment2.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    TransactionID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TransactionID = table.Column<int>(nullable: false, defaultValueSql: "NEXT VALUE FOR shared.TransactionSequence"),
                     TransactionType = table.Column<int>(nullable: false),
                     AccountNumber = table.Column<int>(nullable: false),
                     DestinationAccountNumber = table.Column<int>(nullable: true),

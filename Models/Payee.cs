@@ -21,16 +21,12 @@ namespace Assignment2.Models
         [StringLength(40)]
         public string City { get; set; }
 
-        // incomplete format
-        [StringLength(20)]
-        public string State { get; set; }
+        public AustralianState State { get; set; }
 
-        // incomplete format
-        [StringLength(10)]
+        [StringLength(10), RegularExpression("^[0-9]{4}$", ErrorMessage = "Postcode must be 4 digits")]
         public string PostCode { get; set; }
 
-        // incomplete format
-        [Required, StringLength(15)]
+        [Required, StringLength(15), RegularExpression(@"^\(61\)- ([0-9]{4}) ([0-9]{4})$", ErrorMessage = "Phone number must be (61)- XXXX XXXX")]
         public string Phone { get; set; }
 
         public virtual List<BillPay> BillPays { get; set; }

@@ -14,14 +14,14 @@ namespace Assignment2.Models
 
     public class Account
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(0, 9999)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Range(1000, 9999)]
         [Display(Name = "Account Number")]
         public int AccountNumber { get; set; }
 
         [Required, Display(Name = "Type"), StringLength(1)]
         public AccountType AccountType { get; set; }
 
-        [Required, Range(0, 9999)]
+        [Required, Range(1000, 9999)]
         public int CustomerID { get; set; }
         public virtual Customer Customer { get; set; }
 
