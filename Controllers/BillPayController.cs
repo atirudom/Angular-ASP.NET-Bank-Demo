@@ -67,13 +67,24 @@ namespace Assignment2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BillPayID,AccountNumber,PayeeID,Amount,ScheduleDate,Period,ModifyDate")] BillPay billPay)
         {
+            // input fixed values
             billPay.ModifyDate = DateTime.UtcNow;
+            billPay.Status = BillStatus.Normal;
+            billPay.ScheduleDate = DateTime.SpecifyKind(billPay.ScheduleDate, DateTimeKind.Local).ToUniversalTime();
+
+            // input validation
+            if (billPay.ScheduleDate <= DateTime.UtcNow)
+            {
+                ModelState.AddModelError(nameof(billPay.ScheduleDate), "Schedule time must be after this time");
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(billPay);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // operation when error occurs
             var customerAccounts = _context.Customers.FirstOrDefault(c => c.CustomerID == CustomerID).Accounts;
             ViewData["AccountNumber"] = new SelectList(customerAccounts, "AccountNumber", "AccountNumber");
             ViewData["PayeeID"] = new SelectList(_context.Payees, "PayeeID", "PayeeName");
@@ -102,13 +113,23 @@ namespace Assignment2.Controllers
         }
 
         // POST: BillPay/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BillPayID,AccountNumber,PayeeID,Amount,ScheduleDate,Period,ModifyDate")] BillPay billPay)
         {
+            // Input fixed value
             billPay.ModifyDate = DateTime.UtcNow;
+            billPay.Status = BillStatus.Normal;
+            billPay.ScheduleDate = DateTime.SpecifyKind(billPay.ScheduleDate, DateTimeKind.Local).ToUniversalTime();
+            billPay.StatusMessage = null;
+            billPay.Status = BillStatus.Normal;
+
+            // User input validation
+            if (billPay.ScheduleDate <= DateTime.UtcNow)
+            {
+                ModelState.AddModelError(nameof(billPay.ScheduleDate), "Schedule time must be after this time");
+            }
+
             if (id != billPay.BillPayID)
             {
                 return NotFound();

@@ -22,8 +22,6 @@ namespace Assignment2.Controllers
         public LoginController(MainContext context)
         {
             _context = context;
-            //MainPersistence.RunBillPayPersistence(context);
-            //_context.SaveChangesAsync();
         }
 
         public IActionResult Index() => View();

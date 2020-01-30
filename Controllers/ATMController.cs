@@ -13,6 +13,7 @@ using Assignment2.Models.Adapter;
 using Assignment2.CustomExceptions;
 using Assignment2.Utils;
 using X.PagedList;
+using Assignment2.Controllers.Functions;
 
 namespace Assignment2.Controllers
 {
@@ -44,7 +45,7 @@ namespace Assignment2.Controllers
             Account account = await _context.Accounts.FindAsync(id);
 
             if (amount < 0)
-                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
+                ModelState.AddModelError(nameof(amount), "Amount must not be lower than 0.");
             if (amount.HasMoreThanTwoDecimalPlaces())
                 ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
             if (!ModelState.IsValid)
@@ -53,18 +54,14 @@ namespace Assignment2.Controllers
                 return View(account);
             }
 
-            try
+            ATMMediator.Deposit(account, amount, ModelState);
+            if (!ModelState.IsValid)
             {
-                AccountAdapter accountAdapter = new AccountAdapter(account);
-                accountAdapter.Deposit(amount);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (BusinessRulesException e)
-            {
-                ModelState.AddModelError(nameof(amount), e.errMsg);
                 return View(account);
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Withdraw(int id) => View(await _context.Accounts.FindAsync(id));
@@ -75,7 +72,7 @@ namespace Assignment2.Controllers
             Account account = await _context.Accounts.FindAsync(id);
 
             if (amount < 0)
-                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
+                ModelState.AddModelError(nameof(amount), "Amount must not be lower than 0.");
             if (amount.HasMoreThanTwoDecimalPlaces())
                 ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
             if (!ModelState.IsValid)
@@ -84,74 +81,56 @@ namespace Assignment2.Controllers
                 return View(account);
             }
 
-            try
+            ATMMediator.Withdraw(account, amount, ModelState);
+            if (!ModelState.IsValid)
             {
-                AccountAdapter accountAdapter = new AccountAdapter(account);
-                accountAdapter.Withdraw(amount);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (BusinessRulesException e)
-            {
-                ModelState.AddModelError(nameof(amount), e.errMsg);
                 return View(account);
             }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
-
-        //public async Task<IActionResult> TransferBetweenAccounts() => View(await _context.Customers.FindAsync(CustomerID));
-
-        //[HttpPost]
-        ////public async Task<IActionResult> TransferBetweenAccounts(int id, int destAccountNumber, decimal amount, string comment)
-        //{
-        //    return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferBetweenAccounts));
-        //}
 
         public async Task<IActionResult> TransferToOther(int id) => View(await _context.Accounts.FindAsync(id));
 
         [HttpPost]
-        public async Task<IActionResult> TransferToOther(int id, int destAccountNumber, decimal amount, string comment)
+        public async Task<IActionResult> TransferToOther(int id, int destinationAccountNumber, decimal amount, string comment)
         {
-            return await Transfer(id, destAccountNumber, amount, comment, nameof(TransferToOther));
+            return await Transfer(id, destinationAccountNumber, amount, comment, nameof(TransferToOther));
         }
 
         // Transfer method. TODO: Should be separated
-        public async Task<IActionResult> Transfer(int id, int destAccountNumber, decimal amount, string comment, string actionOrigin)
+        // actionOrigin parameter is used in case if there is another kind of transfer in the future. Ex: transfer between accounts
+        public async Task<IActionResult> Transfer(int id, int destinationAccountNumber, decimal amount, string comment, string actionOrigin)
         {
             Account account = await _context.Accounts.FindAsync(id);
-            Account destinationAccount = await _context.Accounts.FindAsync(destAccountNumber);
+            Account destinationAccount = await _context.Accounts.FindAsync(destinationAccountNumber);
 
+            // input validation
             if (amount < 0)
-                ModelState.AddModelError(nameof(amount), "Amount must be at least 1.");
+                ModelState.AddModelError(nameof(amount), "Amount must not be lower than 0.");
             if (amount.HasMoreThanTwoDecimalPlaces())
                 ModelState.AddModelError(nameof(amount), "Amount cannot have more than 2 decimal places.");
             if (destinationAccount == null)
-                ModelState.AddModelError(nameof(destAccountNumber), "Account with this number is not found");
+                ModelState.AddModelError(nameof(destinationAccountNumber), "Account with this number is not found");
             if (!ModelState.IsValid)
             {
                 return ReturnWithError();
             }
 
-            try
+            // operation execution
+            ATMMediator.Transfer(account, destinationAccount, amount, comment, ModelState);
+            if (!ModelState.IsValid)
             {
-                AccountTransferAdapter accountTransferAdapter = new AccountTransferAdapter(account, destinationAccount);
-                accountTransferAdapter.CreateTransferTransaction(amount, comment);
-                accountTransferAdapter.ExecuteTransferTransaction();
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            catch (TransactionRuleException e)
-            {
-                ModelState.AddModelError(nameof(destAccountNumber), e.errMsg);
-                return ReturnWithError();
-            }
-            catch (BusinessRulesException e)
-            {
-                ModelState.AddModelError(nameof(amount), e.errMsg);
                 return ReturnWithError();
             }
 
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+            // private method for repeatitive calling inside this method
             IActionResult ReturnWithError() {
-                ViewBag.DestAccountNumber = destAccountNumber;
+                ViewBag.DestinationAccountNumber = destinationAccountNumber;
                 ViewBag.Amount = amount;
                 ViewBag.Comment = comment;
                 return View(actionOrigin, account);

@@ -12,6 +12,8 @@ using X.PagedList;
 using Microsoft.AspNetCore.Http;
 using Assignment2.Attributes;
 using Assignment2.ViewModels;
+using Assignment2.Models.Builder;
+using Assignment2.Controllers.Functions;
 
 namespace Assignment2.Controllers
 {
@@ -26,7 +28,7 @@ namespace Assignment2.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> ViewMyStatement(int? page = 1, string accountType = "Saving")
+        public async Task<IActionResult> ViewMyStatement(int? page = 1, AccountType accountType = AccountType.Saving)
         {
             // Retrieve customer object from context
             var customer = await _context.Customers.FindAsync(CustomerID);
@@ -36,43 +38,7 @@ namespace Assignment2.Controllers
             // Page the orders, maximum of 4 per page.
             const int pageSize = 4;
 
-            List<Transaction> resultTransactions = new List<Transaction>();
-            IEnumerable<Account> matchedAccounts;
-            switch (accountType)
-            {
-                case "Saving":
-                    matchedAccounts = accounts.Where(x => x.AccountType == AccountType.Saving);
-                    matchedAccounts.ToList().ForEach(account =>
-                    {
-                        resultTransactions.AddRange(account.GetAllTransactions());
-                    });
-                    break;
-                case "Checking":
-                    matchedAccounts = accounts.Where(x => x.AccountType == AccountType.Checking);
-                    matchedAccounts.ToList().ForEach(account =>
-                    {
-                        resultTransactions.AddRange(account.GetAllTransactions());
-                    });
-                    break;
-                default:
-                    accounts.ForEach(account =>
-                    {
-                        resultTransactions.AddRange(account.GetAllTransactions());
-                    });
-                    break;
-            }
-
-            // Sort DateTime descending
-            List<Transaction> tmpTransactions = resultTransactions.ToList();
-            tmpTransactions.Sort((x, y) => DateTime.Compare(y.TransactionTimeUtc, x.TransactionTimeUtc));
-
-            var pagedList = await tmpTransactions.ToPagedListAsync((int)page, pageSize);
-
-            ViewMyStatementVM viewModel = new ViewMyStatementVM()
-            {
-                SelectedAccountType = accountType,
-                PagedListTransactions = pagedList,
-            };
+            ViewMyStatementVM viewModel = ViewMyStatementMediator.GenerateMyStatementViewModel(customer, accountType, (int)page, pageSize);
 
             return View(viewModel);
         }
@@ -153,6 +119,7 @@ namespace Assignment2.Controllers
         {
             Login login = await _context.Logins.Where(x => x.CustomerID == customerID).FirstOrDefaultAsync();
             login.PasswordHash = PBKDF2.Hash(newPassword);
+            login.ModifyDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
