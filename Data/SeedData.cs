@@ -1,4 +1,5 @@
 ﻿using Assignment2.Models;
+using Assignment2.Models.Adapter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -27,8 +28,9 @@ namespace Assignment2.Data
                     Name = "Matthew Bolger",
                     Address = "123 Fake Street",
                     City = "Melbourne",
+                    State = AustralianState.VIC,
                     PostCode = "3000",
-                    Phone = "0351548454"
+                    Phone = "(61)- 5154 8454"
                 },
                 new Customer
                 {
@@ -36,14 +38,15 @@ namespace Assignment2.Data
                     Name = "Rodney Cocker",
                     Address = "456 Real Road",
                     City = "Melbourne",
+                    State = AustralianState.VIC,
                     PostCode = "3005",
-                    Phone = "0351548454"
+                    Phone = "(61)- 2134 8454"
                 },
                 new Customer
                 {
                     CustomerID = 2300,
                     Name = "Shekhar Kalra",
-                    Phone = "0351548454"
+                    Phone = "(61)- 5154 5245"
                 });
 
             context.Logins.AddRange(
@@ -74,28 +77,28 @@ namespace Assignment2.Data
                 {
                     AccountType = AccountType.Saving,
                     CustomerID = 2100,
-                    Balance = 100,
+                    Balance = 0,
                     ModifyDate = now
                 },
                 new Account
                 {
                     AccountType = AccountType.Checking,
                     CustomerID = 2100,
-                    Balance = 500,
+                    Balance = 0,
                     ModifyDate = now
                 },
                 new Account
                 {
                     AccountType = AccountType.Saving,
                     CustomerID = 2200,
-                    Balance = 500.95m,
+                    Balance = 0,
                     ModifyDate = now
                 },
                 new Account
                 {
                     AccountType = AccountType.Checking,
                     CustomerID = 2300,
-                    Balance = 1250.50m,
+                    Balance = 0,
                     ModifyDate = now
                 });
 
@@ -105,20 +108,40 @@ namespace Assignment2.Data
                     PayeeName = "Atirudom",
                     Address = "400 King Street",
                     City = "Melbourne",
-                    State = "VIC",
+                    State = AustralianState.VIC,
                     PostCode = "3020",
-                    Phone = "(61) - 29374612"
+                    Phone = "(61)- 2937 4612"
                 },
                 new Payee
                 {
                     PayeeName = "Telstra",
                     Address = "402 Test Street",
                     City = "Sydney",
-                    State = "NSW",
+                    State = AustralianState.NSW,
                     PostCode = "3000",
-                    Phone = "(61) - 12345678"
+                    Phone = "(61)- 5154 1233"
                 }
             );
+            context.SaveChanges();
+            InitTransactions(serviceProvider);
+        }
+
+        private static void InitTransactions(IServiceProvider serviceProvider)
+        {
+            var context = new MainContext(serviceProvider.GetRequiredService<DbContextOptions<MainContext>>());
+
+            // Initial Deposit
+
+            string comment = "Initial deposit";
+            List<Account> accounts = context.Accounts.ToListAsync().Result;
+            AccountAdapter accountAdapter = new AccountAdapter(accounts[0]);
+            accountAdapter.Deposit(100, comment);
+            accountAdapter = new AccountAdapter(accounts[1]);
+            accountAdapter.Deposit(500, comment);
+            accountAdapter = new AccountAdapter(accounts[2]);
+            accountAdapter.Deposit(500.95m, comment);
+            accountAdapter = new AccountAdapter(accounts[3]);
+            accountAdapter.Deposit(1000, comment);
 
             context.SaveChanges();
         }
