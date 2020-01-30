@@ -61,6 +61,9 @@ namespace Assignment2.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("money");
 
+                    b.Property<DateTime>("LastPaymentTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ModifyDate")
                         .HasColumnType("datetime2");
 
@@ -72,6 +75,12 @@ namespace Assignment2.Migrations
 
                     b.Property<DateTime>("ScheduleDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StatusMessage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BillPayID");
 

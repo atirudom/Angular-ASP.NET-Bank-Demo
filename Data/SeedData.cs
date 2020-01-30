@@ -17,7 +17,7 @@ namespace Assignment2.Data
             if (context.Customers.Any())
                 return; // DB has already been seeded.
 
-            const string dateFormat = "dd/MM/yyyy hh:mm:ss tt";
+            //const string dateFormat = "dd/MM/yyyy hh:mm:ss tt";
             DateTime now = DateTime.UtcNow;
 
             context.Customers.AddRange(
@@ -99,41 +99,6 @@ namespace Assignment2.Data
                     ModifyDate = now
                 });
 
-            //const string openingBalance = "Opening balance";
-            //context.Transactions.AddRange(
-            //    new Transaction
-            //    {
-            //        TransactionType = TransactionType.Deposit,
-            //        AccountNumber = 4100,
-            //        Amount = 100,
-            //        Comment = openingBalance,
-            //        TransactionTimeUtc = DateTime.ParseExact("19/12/2019 08:00:00 PM", dateFormat, null)
-            //    },
-            //    new Transaction
-            //    {
-            //        TransactionType = TransactionType.Deposit,
-            //        AccountNumber = 4101,
-            //        Amount = 500,
-            //        Comment = openingBalance,
-            //        TransactionTimeUtc = DateTime.ParseExact("19/12/2019 08:30:00 PM", dateFormat, null)
-            //    },
-            //    new Transaction
-            //    {
-            //        TransactionType = TransactionType.Deposit,
-            //        AccountNumber = 4200,
-            //        Amount = 500.95m,
-            //        Comment = openingBalance,
-            //        TransactionTimeUtc = DateTime.ParseExact("19/12/2019 09:00:00 PM", dateFormat, null)
-            //    },
-            //    new Transaction
-            //    {
-            //        TransactionType = TransactionType.Deposit,
-            //        AccountNumber = 4300,
-            //        Amount = 1250.50m,
-            //        Comment = "Opening balance",
-            //        TransactionTimeUtc = DateTime.ParseExact("19/12/2019 10:00:00 PM", dateFormat, null)
-            //    });
-
             context.Payees.AddRange(
                 new Payee
                 {
@@ -143,6 +108,15 @@ namespace Assignment2.Data
                     State = "VIC",
                     PostCode = "3020",
                     Phone = "(61) - 29374612"
+                },
+                new Payee
+                {
+                    PayeeName = "Telstra",
+                    Address = "402 Test Street",
+                    City = "Sydney",
+                    State = "NSW",
+                    PostCode = "3000",
+                    Phone = "(61) - 12345678"
                 }
             );
 

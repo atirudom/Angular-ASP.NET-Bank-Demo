@@ -99,6 +99,9 @@ namespace Assignment2.Migrations
                     Amount = table.Column<decimal>(type: "money", nullable: false),
                     ScheduleDate = table.Column<DateTime>(nullable: false),
                     Period = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    StatusMessage = table.Column<string>(nullable: true),
+                    LastPaymentTime = table.Column<DateTime>(nullable: false),
                     ModifyDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
