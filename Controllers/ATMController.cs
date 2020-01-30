@@ -99,7 +99,7 @@ namespace Assignment2.Controllers
             return await Transfer(id, destinationAccountNumber, amount, comment, nameof(TransferToOther));
         }
 
-        // Transfer method. TODO: Should be separated
+        // Transfer method.
         // actionOrigin parameter is used in case if there is another kind of transfer in the future. Ex: transfer between accounts
         public async Task<IActionResult> Transfer(int id, int destinationAccountNumber, decimal amount, string comment, string actionOrigin)
         {

@@ -33,6 +33,7 @@ namespace Assignment2
                 }
             }
 
+            // Run persistence session
             // Remove this when do initial migration -> this will cause empty InitialCreate problem
             var service = host.Services.CreateScope().ServiceProvider;
             MainPersistence.RunBillPayPersistence(service);

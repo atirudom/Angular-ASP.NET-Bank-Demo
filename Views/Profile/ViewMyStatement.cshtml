@@ -11,7 +11,7 @@
 @functions{
     public string RenderTimeLocale(DateTime dateTime)
     {
-        var datePatt = "dd/MM/yyyy hh:mm:ss tt";
+        var datePatt = "dd/MM/yyyy hh:mm tt";
         return dateTime.ToLocalTime().ToString(datePatt);
     }
 }
@@ -59,22 +59,24 @@
     <table class="table">
         <tr>
             <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionID)</th>
-            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].AccountNumber)</th>
-            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].DestinationAccountNumber)</th>
+            <th>From Account Number</th>
+            <th>To Number</th>
             <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].Amount)</th>
             <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].TransactionType)</th>
             <th>Local TransactionTime</th>
+            <th>@Html.DisplayNameFor(x => x.PagedListTransactions[0].Comment)</th>
         </tr>
         @foreach (var trans in Model.PagedListTransactions)
         {
-            <tr>
-                <td>@Html.DisplayFor(x => trans.TransactionID)</td>
-                <td>@Html.DisplayFor(x => trans.AccountNumber)</td>
-                <td>@Html.DisplayFor(x => trans.DestinationAccountNumber)</td>
-                <td>@Html.DisplayFor(x => trans.Amount)</td>
-                <td>@Html.DisplayFor(x => trans.TransactionType)</td>
-                <td>@RenderTimeLocale(trans.TransactionTimeUtc)</td>
-            </tr>
+    <tr>
+        <td>@Html.DisplayFor(x => trans.TransactionID)</td>
+        <td>@Html.DisplayFor(x => trans.AccountNumber)</td>
+        <td>@Html.DisplayFor(x => trans.DestinationAccountNumber)</td>
+        <td>@Html.DisplayFor(x => trans.Amount)</td>
+        <td>@Html.DisplayFor(x => trans.TransactionType)</td>
+        <td>@RenderTimeLocale(trans.TransactionTimeUtc)</td>
+        <td>@Html.DisplayFor(x => trans.Comment)</td>
+    </tr>
         }
     </table>
 

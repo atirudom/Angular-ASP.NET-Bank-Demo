@@ -13,13 +13,15 @@ namespace Assignment2.Persistence
 {
     public static class MainPersistence
     {
+        // Moe timer variable outside to avoid session destroying for auto optimazation
+        static System.Threading.Timer timer;
         public static void RunBillPayPersistence(IServiceProvider service)
         {
             var startTimeSpan = TimeSpan.Zero;
             var periodTimeSpan = TimeSpan.FromMinutes(1);
 
             // Will be executed every 1 minute
-            var timer = new System.Threading.Timer((e) =>
+            timer = new System.Threading.Timer((e) =>
             {
                 ExecuteBillPaySchedule(service);
             }, null, startTimeSpan, periodTimeSpan);
