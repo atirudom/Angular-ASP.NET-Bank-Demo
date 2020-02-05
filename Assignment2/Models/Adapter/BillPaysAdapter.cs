@@ -30,12 +30,12 @@ namespace Assignment2.Models.Adapter
                 now.AddMilliseconds(-now.Millisecond);      // Ignore millisecond
 
                 // If bill schedule date is after now = set bill error
-                if (bill.ScheduleDate < now)
-                {
-                    bill.Status = BillStatus.Error;
-                    bill.StatusMessage = "The schedule time has passed but was not paid";
-                    return;
-                }
+                //if (bill.ScheduleDate < now && bill.Status == BillStatus.Normal)
+                //{
+                //    bill.Status = BillStatus.Error;
+                //    bill.StatusMessage = "The schedule time has passed but was not paid";
+                //    return;
+                //}
 
                 if (bill.Status == BillStatus.Error) return;            // Avoid error bill
                 if (bill.LastPaymentTime.IsSameMinute(now)) return;    // Avoid repeated calling

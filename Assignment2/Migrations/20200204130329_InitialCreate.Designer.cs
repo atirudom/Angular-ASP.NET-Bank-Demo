@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assignment2.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20200130111240_InitialCreate")]
+    [Migration("20200204130329_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,8 +121,7 @@ namespace Assignment2.Migrations
                         .HasMaxLength(10);
 
                     b.Property<int>("State")
-                        .HasColumnType("int")
-                        .HasMaxLength(20);
+                        .HasColumnType("int");
 
                     b.Property<string>("TFN")
                         .HasColumnType("nvarchar(11)")
@@ -138,13 +137,22 @@ namespace Assignment2.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("LockUntilTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("ModifyDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("NumOfFailedLoginAttempt")
+                        .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(64)")
                         .HasMaxLength(64);
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserID")
                         .IsRequired()
@@ -190,8 +198,7 @@ namespace Assignment2.Migrations
                         .HasMaxLength(10);
 
                     b.Property<int>("State")
-                        .HasColumnType("int")
-                        .HasMaxLength(20);
+                        .HasColumnType("int");
 
                     b.HasKey("PayeeID");
 

@@ -55,21 +55,27 @@ namespace Assignment2.Data
                     UserID = "12345678",
                     CustomerID = 2100,
                     PasswordHash = "YBNbEL4Lk8yMEWxiKkGBeoILHTU7WZ9n8jJSy8TNx0DAzNEFVsIVNRktiQV+I8d2",
-                    ModifyDate = now
+                    ModifyDate = now,
+                    NumOfFailedLoginAttempt = 0,
+                    Status = LoginStatus.Normal
                 },
                 new Login
                 {
                     UserID = "38074569",
                     CustomerID = 2200,
                     PasswordHash = "EehwB3qMkWImf/fQPlhcka6pBMZBLlPWyiDW6NLkAh4ZFu2KNDQKONxElNsg7V04",
-                    ModifyDate = now
+                    ModifyDate = now,
+                    NumOfFailedLoginAttempt = 0,
+                    Status = LoginStatus.Normal
                 },
                 new Login
                 {
                     UserID = "17963428",
                     CustomerID = 2300,
                     PasswordHash = "LuiVJWbY4A3y1SilhMU5P00K54cGEvClx5Y+xWHq7VpyIUe5fe7m+WeI0iwid7GE",
-                    ModifyDate = now
+                    ModifyDate = now,
+                    NumOfFailedLoginAttempt = 0,
+                    Status = LoginStatus.Normal
                 });
 
             context.Accounts.AddRange(

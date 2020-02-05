@@ -18,12 +18,13 @@ namespace Assignment2.Persistence
         public static void RunBillPayPersistence(IServiceProvider service)
         {
             var startTimeSpan = TimeSpan.Zero;
-            var periodTimeSpan = TimeSpan.FromMinutes(1);
+            var periodTimeSpan = TimeSpan.FromSeconds(10);
 
             // Will be executed every 1 minute
             timer = new System.Threading.Timer((e) =>
             {
                 ExecuteBillPaySchedule(service);
+                ExecuteLoginUnlockTime(service);
             }, null, startTimeSpan, periodTimeSpan);
         }
 
@@ -33,6 +34,22 @@ namespace Assignment2.Persistence
 
             BillPaysAdapter billPayAdapter = new BillPaysAdapter(context.BillPays.ToList(), context);
             billPayAdapter.ExecuteBillPaySchedule();
+
+            context.SaveChangesAsync();
+        }
+
+        private static void ExecuteLoginUnlockTime(IServiceProvider service)
+        {
+            var context = new MainContext(service.GetRequiredService<DbContextOptions<MainContext>>());
+
+            foreach (Login login in context.Logins)
+            {
+                // If lockUntilTime is passed
+                if(login.Status == LoginStatus.Locked && login.LockUntilTime < DateTime.UtcNow)
+                {
+                    login.Unlock();
+                }
+            }
 
             context.SaveChangesAsync();
         }

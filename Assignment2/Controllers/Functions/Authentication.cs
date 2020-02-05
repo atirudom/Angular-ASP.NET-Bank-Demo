@@ -19,10 +19,14 @@ namespace Assignment2.Controllers.Functions
             // If userID is not found or password does not match
             if (login == null || password == null || !PBKDF2.Verify(login.PasswordHash, password))
             {
+                login.AttemptLoginFailed();
+                context.SaveChanges();
                 return null;
             }
             else
             {
+                login.AttemptLoginSuccessful();
+                context.SaveChanges();
                 return login.Customer;
             }
         }

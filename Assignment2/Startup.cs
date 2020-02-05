@@ -38,6 +38,7 @@ namespace Assignment2
             {
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
             });
 
             services.AddControllersWithViews();
@@ -56,6 +57,10 @@ namespace Assignment2
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //set up a middleware to handle the request in the pipeline
+            app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();

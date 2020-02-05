@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Assignment2.Data;
 using Assignment2.Models;
 using Microsoft.AspNetCore.Http;
+using Assignment2.Attributes;
 
 namespace Assignment2.Controllers
 {
+    [AuthorizeCustomer]
     public class BillPayController : Controller
     {
         private readonly MainContext _context;

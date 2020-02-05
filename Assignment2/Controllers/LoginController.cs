@@ -31,11 +31,19 @@ namespace Assignment2.Controllers
         public async Task<IActionResult> Login(string userID, string password)
         {
             Customer loggedInCustomer = await Authentication.AuthenticateAsync(_context, userID, password);
+            var login = await _context.Logins.FirstOrDefaultAsync(x => x.UserID == userID);
+            if (login?.Status == LoginStatus.Locked)
+            {
+                ModelState.AddModelError("LoginFailed", "This account has been locked for 1 minute");
+                return View(nameof(Index), new Login { UserID = userID });
+            }
+
             if (loggedInCustomer == null)
             {
                 ModelState.AddModelError("LoginFailed", "Login failed, please try again.");
                 return View(nameof(Index), new Login { UserID = userID });
             }
+
             // Set session for loggedIn customer.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), loggedInCustomer.CustomerID);
             HttpContext.Session.SetString(nameof(Customer.Name), loggedInCustomer.Name);

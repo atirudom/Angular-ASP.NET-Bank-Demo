@@ -16,7 +16,7 @@ namespace Assignment2.Migrations
                     TFN = table.Column<string>(maxLength: 11, nullable: true),
                     Address = table.Column<string>(maxLength: 50, nullable: true),
                     City = table.Column<string>(maxLength: 40, nullable: true),
-                    State = table.Column<int>(maxLength: 20, nullable: false),
+                    State = table.Column<int>(nullable: false),
                     PostCode = table.Column<string>(maxLength: 10, nullable: true),
                     Phone = table.Column<string>(maxLength: 15, nullable: false)
                 },
@@ -33,7 +33,7 @@ namespace Assignment2.Migrations
                     PayeeName = table.Column<string>(maxLength: 50, nullable: false),
                     Address = table.Column<string>(maxLength: 50, nullable: true),
                     City = table.Column<string>(maxLength: 40, nullable: true),
-                    State = table.Column<int>(maxLength: 20, nullable: false),
+                    State = table.Column<int>(nullable: false),
                     PostCode = table.Column<string>(maxLength: 10, nullable: true),
                     Phone = table.Column<string>(maxLength: 15, nullable: false)
                 },
@@ -71,7 +71,10 @@ namespace Assignment2.Migrations
                     CustomerID = table.Column<int>(nullable: false),
                     UserID = table.Column<string>(maxLength: 50, nullable: false),
                     PasswordHash = table.Column<string>(maxLength: 64, nullable: false),
-                    ModifyDate = table.Column<DateTime>(nullable: false)
+                    ModifyDate = table.Column<DateTime>(nullable: false),
+                    NumOfFailedLoginAttempt = table.Column<int>(nullable: false),
+                    LockUntilTime = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
