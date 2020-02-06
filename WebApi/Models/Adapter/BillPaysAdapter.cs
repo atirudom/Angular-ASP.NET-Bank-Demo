@@ -1,14 +1,14 @@
-﻿using Assignment2.CustomExceptions;
-using Assignment2.Data;
-using Assignment2.Models.Factory;
-using Assignment2.Utils;
+﻿using AdminApi.CustomExceptions;
+using AdminApi.Data;
+using AdminApi.Models.Factory;
+using AdminApi.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Models.Adapter
+namespace AdminApi.Models.Adapter
 {
     public class BillPaysAdapter
     {

@@ -1,12 +1,12 @@
-﻿using Assignment2.Models;
-using Assignment2.Models.Builder;
+﻿using AdminApi.Models;
+using AdminApi.Models.Builder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using X.PagedList;
 
-namespace Assignment2.ViewModels.Factory
+namespace AdminApi.ViewModels.Factory
 {
     public class ViewMyStatementVMFactory
     {

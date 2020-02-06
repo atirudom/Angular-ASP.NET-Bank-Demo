@@ -1,10 +1,10 @@
-﻿using Assignment2.CustomExceptions;
+﻿using AdminApi.CustomExceptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Assignment2.Models
+namespace AdminApi.Models
 {
     public enum AccountType
     {

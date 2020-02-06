@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Assignment2.Data;
+using AdminApi.Data;
+using AdminApi.Models.DataManager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,10 +12,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Assignment2
+namespace AdminApi
 {
     public class Startup
     {
+        private const string _enableCrossOriginRequestsKey = "EnableCrossOriginRequests";
+
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
@@ -38,7 +41,14 @@ namespace Assignment2
                 options.IdleTimeout = TimeSpan.FromMinutes(1);
             });
 
+            services.AddCors(options =>
+                options.AddPolicy(_enableCrossOriginRequestsKey,
+                builder => builder.WithOrigins("https://localhost:44349").AllowAnyHeader().AllowAnyMethod()));
+
             services.AddControllers();
+
+            services.AddTransient<CustomerManager>();
+            services.AddTransient<LoginManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +56,8 @@ namespace Assignment2
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
+
+            app.UseCors(_enableCrossOriginRequestsKey);
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

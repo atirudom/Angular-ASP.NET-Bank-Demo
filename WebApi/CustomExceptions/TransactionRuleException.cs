@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.CustomExceptions
+namespace AdminApi.CustomExceptions
 {
     class TransactionRuleException : System.Exception
     {
