@@ -1,11 +1,11 @@
-﻿using Assignment2.CustomExceptions;
-using Assignment2.Models.Factory;
+﻿using AdminApi.CustomExceptions;
+using AdminApi.Models.Factory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Models.Adapter
+namespace AdminApi.Models.Adapter
 {
     // AccountAdapter class contains a set of transaction services that occur between two accounts
     // which currently contain only Transferring between personal accounts. 

@@ -1,5 +1,5 @@
-﻿using Assignment2.Models;
-using Assignment2.Models.Adapter;
+﻿using AdminApi.Models;
+using AdminApi.Models.Adapter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Data
+namespace AdminApi.Data
 {
     public class SeedData
     {

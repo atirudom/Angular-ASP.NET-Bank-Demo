@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Utils
+namespace AdminApi.Utils
 {
     public static class ValueValidationUtils
     {

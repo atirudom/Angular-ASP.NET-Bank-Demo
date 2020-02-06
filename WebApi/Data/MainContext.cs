@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Assignment2.Models;
+using AdminApi.Models;
 
-namespace Assignment2.Data
+namespace AdminApi.Data
 {
     public class MainContext : DbContext
     {

@@ -1,15 +1,15 @@
-﻿using Assignment2.Data;
-using Assignment2.Models;
+﻿using AdminApi.Data;
+using AdminApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Assignment2.Utils;
+using AdminApi.Utils;
 using Microsoft.EntityFrameworkCore;
-using Assignment2.Models.Adapter;
+using AdminApi.Models.Adapter;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Assignment2.Persistence
+namespace AdminApi.Persistence
 {
     public static class MainPersistence
     {
