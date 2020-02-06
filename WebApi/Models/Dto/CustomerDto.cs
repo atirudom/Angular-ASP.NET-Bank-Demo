@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AdminApi.Models.Dto
+{
+    public class CustomerDto
+    {
+        public int CustomerID { get; set; }
+        public string Name { get; set; }
+        public string TFN { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string PostCode { get; set; }
+        public string Phone { get; set; }
+
+        public CustomerDto() { }
+
+        public CustomerDto(Customer cus) {
+            CustomerID = cus.CustomerID;
+            Name = cus.Name;
+            TFN = cus.TFN;
+            Address = cus.Address;
+            City = cus.City;
+            State = cus.State.ToString();
+            PostCode = cus.PostCode;
+            Phone = cus.Phone;
+        }
+    }
+}
