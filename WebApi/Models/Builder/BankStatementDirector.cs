@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Models.Builder
+namespace AdminApi.Models.Builder
 {
     public class BankStatementDirector
     {

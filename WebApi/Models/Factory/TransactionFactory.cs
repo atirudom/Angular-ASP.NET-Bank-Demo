@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Assignment2.Models.Factory
+namespace AdminApi.Models.Factory
 {
     public static class TransactionFactory
     {
