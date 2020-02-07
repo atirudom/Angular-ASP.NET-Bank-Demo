@@ -1,0 +1,6 @@
+.text-center {
+  text-align: left !important;
+  padding: 2%;
+  background: #f6f7f8;
+  border-radius: 10px;
+}
