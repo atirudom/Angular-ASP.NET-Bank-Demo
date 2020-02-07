@@ -43,5 +43,14 @@ namespace AdminApi.Controllers
         {
             return "value";
         }
+
+        [HttpPost("lock/{customerID}")]
+        public object Lock(int customerID)
+        {
+            Login login = _repo.Get(customerID);
+            login.LockTemp();
+            _context.SaveChanges();
+            return new { success = true };
+        }
     }
 }
