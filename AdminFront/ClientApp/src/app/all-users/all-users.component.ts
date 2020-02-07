@@ -7,12 +7,12 @@ import { Router } from '@angular/router';
   templateUrl: './all-users.component.html'
 })
 export class AllUsersComponent {
-  public logins: Login[];
+  public customers: Customer[];
 
   constructor(http: HttpClient, private _router: Router) {
-    http.get<Login[]>("http://localhost:63637/" + 'api/logins').subscribe(result => {
-      this.logins = result;
-      console.log(this.logins)
+    http.get<Customer[]>("http://localhost:63637/" + 'api/customers').subscribe(result => {
+      this.customers = result;
+      console.log(this.customers)
     }, error => console.error(error));
   }
 
@@ -26,7 +26,6 @@ interface Login {
   UserID: string;
   LockUntilTime: Date;
   Status: string;
-  Customer: Customer;
 }
 
 interface Customer {
@@ -38,5 +37,6 @@ interface Customer {
   State: string;
   PostCode: string;
   Phone: string;
+  Login: Login;
 }
 
