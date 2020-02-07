@@ -1,0 +1,31 @@
+h1{
+    color: #1b6ec2;
+}
+.table {
+  border-radius: 0 0 10px 10px;
+  background: #f6f7f8;
+  margin-top: 2%;
+}
+
+.row {
+  background: #f6f7f8;
+  border-radius: 10px;
+}
+
+.table td, .table th {
+  vertical-align: initial;
+  text-align: center;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0,0,0,.03);
+}
+.btn-secondary:hover {
+  background-color: #1b6ec2;
+  border-color: #1b6ec2;
+}
+.show > .btn-secondary.dropdown-toggle {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1b6ec2;
+}

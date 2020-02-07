@@ -1,0 +1,28 @@
+.table {
+  border-radius: 0 0 10px 10px;
+  background: #f6f7f8;
+}
+h4 {
+  color: #1b6ec2;
+  font-weight: bold;
+  line-height: 40px;
+  margin-top: 2%;
+}
+.row {
+  background: #f6f7f8;
+  border-radius: 10px;
+}
+.table td, .table th {
+  vertical-align: initial;
+  text-align: center;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0,0,0,.03);
+}
+
+.span_lock_newcss {
+  color: #dc3545;
+  font-variant: all-petite-caps;
+  margin-left:10px;
+  font-weight:normal;
+}
