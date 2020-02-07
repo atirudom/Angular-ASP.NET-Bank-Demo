@@ -37,7 +37,7 @@ namespace Assignment2.Models.Adapter
                 //    return;
                 //}
 
-                if (bill.Status == BillStatus.Error) return;            // Avoid error bill
+                if (bill.Status != BillStatus.Normal) return;            // Avoid error bill
                 if (bill.LastPaymentTime.IsSameMinute(now)) return;    // Avoid repeated calling
 
                 // Execute bill operation
