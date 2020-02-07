@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from "jquery";
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment'
 
 @Component({
@@ -9,8 +9,9 @@ import { environment } from '../../environments/environment'
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private _router: Router) {
-
+  constructor(private _router: Router, private activeRoute: ActivatedRoute) {
+    // force route reload whenever params change;
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   login: { UserID, Password } = { UserID: "", Password: "" };
@@ -20,14 +21,14 @@ export class HomeComponent implements OnInit {
   }
 
   loginAdmin() {
-    $.ajax(environment.adminApiUrl + "api/Admin/Login", {
+    $.ajax(environment.adminApiUrl + "api/Admin/KingLionSecLogin", {
       data: JSON.stringify(this.login),
       contentType: 'application/json',
       type: 'POST',
       success: (data) => {
         console.log(data);
         if (data.loginSuccess) {
-          this._router.navigate(["/all-users"]);
+          window.location.href = "/all-users";
         } else {
           this.invalidLogin = true
         }
