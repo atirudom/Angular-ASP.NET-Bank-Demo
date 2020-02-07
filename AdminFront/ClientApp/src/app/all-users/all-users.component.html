@@ -2,24 +2,24 @@
 
 <p>All user data from server.</p>
 
-<p *ngIf="!logins"><em>Loading...</em></p>
+<p *ngIf="!customers"><em>Loading...</em></p>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="logins">
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="customers">
   <thead>
     <tr>
       <th>User ID</th>
       <th>Customer ID</th>
       <th>Name</th>
-      <th>Status</th>
+      <th>Login Status</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let user of logins">
-      <td>{{ user.userID }}</td>
+    <tr *ngFor="let user of customers">
+      <td>{{ user.login.userID }}</td>
       <td>{{ user.customerID }}</td>
-      <td>{{ user.customer.name }}</td>
-      <td>{{ user.status }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.login.status }}</td>
       <td>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,7 +27,7 @@
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Transactions Stats</a>
-            <a class="dropdown-item" href="#">Admin Actions</a>
+            <a class="dropdown-item" href="/admin-actions/{{ user.customerID }}">Admin Actions</a>
           </div>
         </div>
       </td>
