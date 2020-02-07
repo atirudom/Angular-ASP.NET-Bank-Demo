@@ -7,7 +7,8 @@ import { environment } from '../../environments/environment'
 
 @Component({
   selector: 'app-admin-editcus',
-  templateUrl: './admin-editcus.component.html'
+  templateUrl: './admin-editcus.component.html',
+  styleUrls: ['./admin-editcus.component.css']
 })
 export class AdminEditCusComponent {
   customerForm: FormGroup;
