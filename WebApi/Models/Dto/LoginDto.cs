@@ -9,7 +9,6 @@ namespace AdminApi.Models.Dto
     {
         public int CustomerID { get; set; }
         public string UserID { get; set; }
-        public string PasswordHash { get; set; }
         public DateTime ModifyDate { get; set; }
         public int NumOfFailedLoginAttempt { get; set; }
         public DateTime LockUntilTime { get; set; }
@@ -18,16 +17,18 @@ namespace AdminApi.Models.Dto
 
         public LoginDto() { }
 
+        public LoginDto(Login login) : this(login, null) { 
+        }
+
         public LoginDto(Login login, Customer customer)
         {
             CustomerID = login.CustomerID;
             UserID = login.UserID;
-            PasswordHash = login.PasswordHash;
             ModifyDate = login.ModifyDate;
             NumOfFailedLoginAttempt = login.NumOfFailedLoginAttempt;
             LockUntilTime = login.LockUntilTime;
             Status = login.Status.ToString();
-            Customer = new CustomerDto(customer);
+            Customer = customer != null ? new CustomerDto(customer) : null;
         }
     }
 }
