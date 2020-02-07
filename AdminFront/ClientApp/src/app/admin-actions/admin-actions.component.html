@@ -61,8 +61,11 @@
       {{ customer.login.status }}
     </dd>
   </dl>
-  <div style="margin-bottom: 7px">
+  <div style="margin-bottom: 7px" *ngIf="customer.login.status != 'Locked'">
     <button class="btn btn-danger" (click)="lockUser()">Lock User</button>
+  </div>
+  <div style="margin-bottom: 7px" *ngIf="customer.login.status == 'Locked'">
+    <button class="btn btn-danger" (click)="unlockUser()">Unlock User</button>
   </div>
   <div>
     <a [routerLink]="[url.edit]">Edit</a> |

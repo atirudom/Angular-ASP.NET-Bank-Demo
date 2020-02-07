@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from "jquery";
+import { environment } from '../../environments/environment'
 
 @Component({
   selector: 'app-admin-actions-account',
@@ -15,7 +16,7 @@ export class ActionsAccountComponent {
 
   constructor(http: HttpClient, private route: ActivatedRoute) {
     this.customerID = this.route.snapshot.paramMap.get('customerID');
-    http.get<Customer>("http://localhost:63637/" + `api/customers/${this.customerID}`).subscribe(result => {
+    http.get<Customer>(environment.adminApiUrl + `api/customers/${this.customerID}`).subscribe(result => {
       this.customer = result;
       this.accounts = this.customer.accounts
       this.url.edit = `/admin-actions/${this.customerID}/edit`
@@ -27,7 +28,7 @@ export class ActionsAccountComponent {
   ngOnInit() { }
 
   lockUser() {
-    $.ajax("http://localhost:63637/" + "api/logins/lock/" + this.customerID, {
+    $.ajax(environment.adminApiUrl + "api/logins/lock/" + this.customerID, {
       type: 'POST',
       success: (data) => {
         console.log(data);
