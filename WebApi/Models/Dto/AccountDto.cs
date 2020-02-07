@@ -13,6 +13,7 @@ namespace AdminApi.Models.Dto
         public int CustomerID { get; set; }
         public decimal Balance { get; set; }
         public DateTime ModifyDate { get; set; }
+        public List<BillPayDto> BillPays { get; set; }
 
         [JsonIgnore]
         public Account Account;
@@ -26,6 +27,17 @@ namespace AdminApi.Models.Dto
             ModifyDate = acc.ModifyDate;
 
             Account = acc;
+        }
+
+        public void PopulateBillPays()
+        {
+            BillPays = new List<BillPayDto>();
+            var billPayList = Account.BillPays.ToList();
+
+            foreach (var billPay in billPayList)
+            {
+                BillPays.Add(new BillPayDto(billPay));
+            };
         }
     }
 }
