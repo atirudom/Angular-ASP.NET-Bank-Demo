@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-all-users',
-  templateUrl: './all-users.component.html'
+  templateUrl: './all-users.component.html',
+  styleUrls: ['./all-users.component.css']
 })
 export class AllUsersComponent {
   public customers: Customer[];
