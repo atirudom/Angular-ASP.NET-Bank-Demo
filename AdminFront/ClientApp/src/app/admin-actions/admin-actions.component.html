@@ -13,6 +13,12 @@
       {{ customer.customerID }}
     </dd>
     <dt class="col-sm-2">
+      Name
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.name }}
+    </dd>
+    <dt class="col-sm-2">
       TFN
     </dt>
     <dd class="col-sm-10">
@@ -67,24 +73,54 @@
     <thead>
       <tr>
         <th>Account Number</th>
+        <th>Account Type</th>
         <th>Balance</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of customers">
-        <td>{{ user.login.userID }}</td>
-        <td>{{ user.customerID }}</td>
+      <tr *ngFor="let acc of accounts">
+        <td>{{ acc.accountNumber }}</td>
+        <td>{{ acc.accountType }}</td>
+        <td>{{ acc.balance }}</td>
         <td>
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Actions
+            <button class="btn btn-primary" (click)="viewBill(acc.accountNumber)">
+              View Bill Pays
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#">Transactions Stats</a>
-              <a class="dropdown-item" href="/admin-actions/{{ user.customerID }}">Admin Actions</a>
-            </div>
           </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  Bill Pays of the selected account
+
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="billPays">
+    <thead>
+      <tr>
+        <th>BillPay ID</th>
+        <th>For Account</th>
+        <th>Amount</th>
+        <th>Schedule Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bill of billPays">
+        <td>{{ bill.billPayID }}</td>
+        <td>{{ bill.accountNumber }}</td>
+        <td>{{ bill.amount }}</td>
+        <td>{{ bill.scheduleDate }}</td>
+        <td>{{ bill.status }}</td>
+        <td>
+          <button *ngIf="bill.status.toLowerCase() == 'normal'" class="btn btn-primary" (click)="blockBillPay(bill.billPayID)">
+            Block
+          </button>
+          <button *ngIf="bill.status.toLowerCase() != 'normal'" class="btn btn-primary" (click)="unblockBillPay(bill.billPayID)">
+            Unblock
+          </button>
         </td>
       </tr>
     </tbody>
