@@ -52,5 +52,16 @@ namespace AdminApi.Controllers
             _context.SaveChanges();
             return new { success = true };
         }
+
+        [HttpPost("unlock/{customerID}")]
+        public object Unlock(int customerID)
+        {
+            Login login = _repo.Get(customerID);
+            login.Unlock();
+            login.LockUntilTime = DateTime.UtcNow;
+
+            _context.SaveChanges();
+            return new { success = true };
+        }
     }
 }
