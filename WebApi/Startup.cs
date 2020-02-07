@@ -49,6 +49,7 @@ namespace AdminApi
 
             services.AddTransient<CustomerManager>();
             services.AddTransient<LoginManager>();
+            services.AddTransient<BillPayManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
