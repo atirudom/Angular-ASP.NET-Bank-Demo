@@ -1,0 +1,93 @@
+<h1 id="tableLabel">Admin Actions</h1>
+
+<p *ngIf="!customer"><em>Loading...</em></p>
+
+<h3>Customer</h3>
+<hr />
+<div *ngIf="customer">
+  <dl class="row">
+    <dt class="col-sm-2">
+      Customer ID
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.customerID }}
+    </dd>
+    <dt class="col-sm-2">
+      TFN
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.tfn }}
+    </dd>
+    <dt class="col-sm-2">
+      Address
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.address }}
+    </dd>
+    <dt class="col-sm-2">
+      City
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.city }}
+    </dd>
+    <dt class="col-sm-2">
+      State
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.state }}
+    </dd>
+    <dt class="col-sm-2">
+      PostCode
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.postCode }}
+    </dd>
+    <dt class="col-sm-2">
+      Phone
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.phone }}
+    </dd>
+    <dt class="col-sm-2">
+      Login Status
+    </dt>
+    <dd class="col-sm-10">
+      {{ customer.login.status }}
+    </dd>
+  </dl>
+  <div style="margin-bottom: 7px">
+    <button class="btn btn-danger" (click)="lockUser()">Lock User</button>
+  </div>
+  <div>
+    <a [routerLink]="[url.edit]">Edit</a> |
+    <a [routerLink]="[url.back]">Back to all users</a>
+  </div>
+
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="accounts">
+    <thead>
+      <tr>
+        <th>Account Number</th>
+        <th>Balance</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of customers">
+        <td>{{ user.login.userID }}</td>
+        <td>{{ user.customerID }}</td>
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Actions
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">Transactions Stats</a>
+              <a class="dropdown-item" href="/admin-actions/{{ user.customerID }}">Admin Actions</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
