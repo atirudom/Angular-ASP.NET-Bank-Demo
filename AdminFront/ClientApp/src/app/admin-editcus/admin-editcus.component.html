@@ -1,0 +1,55 @@
+<h1 id="tableLabel">Admin Actions</h1>
+
+<p *ngIf="!customer"><em>Loading...</em></p>
+
+<h3>Edit Customer</h3>
+<hr />
+
+<div *ngIf="customerForm">
+  <form [formGroup]="customerForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
+    <div class="form-group row">
+      <label class=" control-label col-md-12">Name</label>
+      <div class="col-md-4"> <input name="name" class="form-control" type="text" formControlName="name"> </div>
+      <span class="text-danger" *ngIf="name.invalid && formDir.submitted">
+        Name is required.
+      </span>
+    </div>
+    <div class="form-group row">
+      <label class="control-label col-md-12" for="tfn">TFN</label>
+      <div class="col-md-4"> <input class="form-control" type="text" formControlName="tfn"> </div>
+    </div>
+    <div class="form-group row">
+      <label class=" control-label col-md-12">Address</label>
+      <div class="col-md-4"> <input name="address" class="form-control" type="text" formControlName="address"> </div>
+      <span class="text-danger" *ngIf="address.invalid && formDir.submitted">
+        Address is required.
+      </span>
+    </div>
+    <div class="form-group row">
+      <label class=" control-label col-md-12">City</label>
+      <div class="col-md-4"> <input name="city" class="form-control" type="text" formControlName="city"> </div>
+      <span class="text-danger" *ngIf="name.invalid && formDir.submitted">
+        City is required.
+      </span>
+    </div>
+    <div class="form-group row">
+      <label class="control-label col-md-12" for="postCode">Post Code</label>
+      <div class="col-md-4"> <input class="form-control" type="text" formControlName="postCode"> </div>
+    </div>
+    <div class="form-group row">
+      <label class="control-label col-md-12" for="phone">Phone</label>
+      <div class="col-md-4"> <input class="form-control" type="text" formControlName="phone"> </div>
+    </div>
+
+    <span class="text-danger" *ngIf="!sendSuccess && formDir.submitted">
+      Cannot send. Some inputs might be invalid.
+    </span>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button (click)="cancel()" class="btn btn-light ml-3">Cancel</button>
+    </div>
+  </form>
+</div>
+
+
