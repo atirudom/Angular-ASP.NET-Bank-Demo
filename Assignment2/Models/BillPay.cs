@@ -20,6 +20,7 @@ namespace Assignment2.Models
         Normal = 1,
         Error = 2,
         Paid = 3,
+        Blocked = 4,
     }
 
     public class BillPay
