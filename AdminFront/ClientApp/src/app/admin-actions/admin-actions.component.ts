@@ -6,7 +6,8 @@ import { environment } from '../../environments/environment'
 
 @Component({
   selector: 'app-admin-actions',
-  templateUrl: './admin-actions.component.html'
+  templateUrl: './admin-actions.component.html',
+  styleUrls: ['./admin-actions.component.css']
 })
 export class AdminActionsComponent {
   public url = { edit: '', back: '' };
@@ -14,6 +15,7 @@ export class AdminActionsComponent {
   public accounts: Account[];
   public billPays: BillPay[];
   public customerID: string;
+  public selectedAccount: int;
 
   constructor(http: HttpClient, private route: ActivatedRoute) {
     this.customerID = this.route.snapshot.paramMap.get('customerID');
@@ -32,6 +34,7 @@ export class AdminActionsComponent {
     $.ajax(environment.adminApiUrl + "api/BillPays/FromAccount/" + accNumber, {
       success: (data) => {
         console.log(data);
+        this.selectedAccount = accNumber;
         this.billPays = data
       }
     })
