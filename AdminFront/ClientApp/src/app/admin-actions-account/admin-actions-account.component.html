@@ -1,0 +1,35 @@
+<h1 id="tableLabel">Admin Actions</h1>
+
+<p *ngIf="!customer"><em>Loading...</em></p>
+
+<h3>Customer</h3>
+<hr />
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="accounts">
+  <thead>
+    <tr>
+      <th>Account Number</th>
+      <th>Account Type</th>
+      <th>Balance</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let acc of accounts">
+      <td>{{ acc.accountNumber }}</td>
+      <td>{{ acc.accountType }}</td>
+      <td>{{ acc.balance }}</td>
+      <td>
+        <div class="dropdown">
+          <a href="/view-account/{{ acc.accountNumber }}/billpay">
+            <button class="btn btn-primary">
+              View Bill Pays
+            </button>
+          </a>
+
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
