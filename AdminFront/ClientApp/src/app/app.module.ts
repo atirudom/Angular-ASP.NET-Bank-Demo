@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { AllUsersComponent } from './all-users/all-users.component';
 import { AdminActionsComponent } from './admin-actions/admin-actions.component';
 import { AdminEditCusComponent } from './admin-editcus/admin-editcus.component';
+import { ActionsAccountComponent } from './admin-actions-account/admin-actions-account.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { AdminEditCusComponent } from './admin-editcus/admin-editcus.component';
     HomeComponent,
     AllUsersComponent,
     AdminActionsComponent,
-    AdminEditCusComponent
+    AdminEditCusComponent,
+    ActionsAccountComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -26,10 +28,11 @@ import { AdminEditCusComponent } from './admin-editcus/admin-editcus.component';
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'secureKinglion/login', component: HomeComponent, pathMatch: 'full' },
       { path: 'all-users', component: AllUsersComponent },
       { path: 'admin-actions/:customerID', component: AdminActionsComponent },
-      { path: 'admin-actions/:customerID/edit', component: AdminEditCusComponent }
+      { path: 'admin-actions/:customerID/edit', component: AdminEditCusComponent },
+      { path: 'admin-actions/account/:accountNumber', component: ActionsAccountComponent }
     ])
   ],
   providers: [],
