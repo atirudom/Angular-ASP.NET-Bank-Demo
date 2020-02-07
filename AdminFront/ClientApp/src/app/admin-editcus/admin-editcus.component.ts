@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as $ from "jquery";
+import { environment } from '../../environments/environment'
 
 @Component({
   selector: 'app-admin-editcus',
@@ -18,7 +19,7 @@ export class AdminEditCusComponent {
 
   constructor(private _fb: FormBuilder, http: HttpClient, private route: ActivatedRoute, private _router: Router) {
     this.customerID = parseInt(this.route.snapshot.paramMap.get('customerID'));
-    http.get<Customer>("http://localhost:63637/" + `api/customers/${this.customerID}`).subscribe(result => {
+    http.get<Customer>(environment.adminApiUrl + `api/customers/${this.customerID}`).subscribe(result => {
       this.customer = result;
       this.url.back = `/admin-actions/${this.customerID}`
       console.log(this.customer)
@@ -47,7 +48,7 @@ export class AdminEditCusComponent {
       return;
     }
     console.log(this.customerForm.value);
-    $.ajax("http://localhost:63637/" + "api/customers/" + this.customerID, {
+    $.ajax(environment.adminApiUrl + "api/customers/" + this.customerID, {
       data: JSON.stringify(this.customerForm.value),
       contentType: 'application/json',
       type: 'PUT',
