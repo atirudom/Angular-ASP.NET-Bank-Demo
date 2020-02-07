@@ -5,7 +5,7 @@
 <h3>Edit Customer</h3>
 <hr />
 
-<div *ngIf="customerForm">
+<div *ngIf="customerForm" class="edit_form_newcss">
   <form [formGroup]="customerForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
     <div class="form-group row">
       <label class=" control-label col-md-12">Name</label>
