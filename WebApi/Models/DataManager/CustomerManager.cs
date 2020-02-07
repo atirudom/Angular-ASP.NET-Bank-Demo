@@ -38,6 +38,11 @@ namespace AdminApi.Models.DataManager
             return _context.Customers.Find(customerID);
         }
 
+        public Login GetLogin(int customerID)
+        {
+            return _context.Logins.Find(customerID);
+        }
+
         public IEnumerable<Customer> GetAll()
         {
             return _context.Customers.ToList();
