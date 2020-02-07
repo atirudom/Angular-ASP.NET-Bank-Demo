@@ -62,15 +62,19 @@
     </dd>
   </dl>
   <div style="margin-bottom: 7px" *ngIf="customer.login.status != 'Locked'">
-    <button class="btn btn-danger" (click)="lockUser()">Lock User</button>
+      <button class="btn btn-danger" (click)="lockUser()">Lock User</button>
+      <span class="span_lock_newcss">The user will be locked within 1 minute.</span>
   </div>
   <div style="margin-bottom: 7px" *ngIf="customer.login.status == 'Locked'">
     <button class="btn btn-danger" (click)="unlockUser()">Unlock User</button>
+     <span class="span_lock_newcss">The user will be unlocked after 1 minute.</span>
   </div>
   <div>
     <a [routerLink]="[url.edit]">Edit</a> |
     <a [routerLink]="[url.back]">Back to all users</a>
   </div>
+
+<h4>Account table for user displayed as below:</h4>
 
   <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="accounts">
     <thead>
@@ -97,36 +101,37 @@
     </tbody>
   </table>
 
-  Bill Pays of the selected account
-
-  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="billPays">
-    <thead>
-      <tr>
-        <th>BillPay ID</th>
-        <th>For Account</th>
-        <th>Amount</th>
-        <th>Schedule Date</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let bill of billPays">
-        <td>{{ bill.billPayID }}</td>
-        <td>{{ bill.accountNumber }}</td>
-        <td>{{ bill.amount }}</td>
-        <td>{{ bill.scheduleDate }}</td>
-        <td>{{ bill.status }}</td>
-        <td>
-          <button *ngIf="bill.status.toLowerCase() == 'normal'" class="btn btn-primary" (click)="blockBillPay(bill.billPayID)">
-            Block
-          </button>
-          <button *ngIf="bill.status.toLowerCase() != 'normal'" class="btn btn-primary" (click)="unblockBillPay(bill.billPayID)">
-            Unblock
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="billPays">
+      <h4>Bill Pays of the {{ selectedAccount }}:</h4>
+      <table class='table table-striped' aria-labelledby="tableLabel">
+          <thead>
+              <tr>
+                  <th>BillPay ID</th>
+                  <th>For Account</th>
+                  <th>Amount</th>
+                  <th>Schedule Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr *ngFor="let bill of billPays">
+                  <td>{{ bill.billPayID }}</td>
+                  <td>{{ bill.accountNumber }}</td>
+                  <td>{{ bill.amount }}</td>
+                  <td>{{ bill.scheduleDate }}</td>
+                  <td>{{ bill.status }}</td>
+                  <td>
+                      <button *ngIf="bill.status.toLowerCase() == 'normal'" class="btn btn-primary" (click)="blockBillPay(bill.billPayID)">
+                          Block
+                      </button>
+                      <button *ngIf="bill.status.toLowerCase() != 'normal'" class="btn btn-primary" (click)="unblockBillPay(bill.billPayID)">
+                          Unblock
+                      </button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
 </div>
 
