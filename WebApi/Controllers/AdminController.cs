@@ -28,9 +28,9 @@ namespace AdminApi.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // POST: api/Admin/Login
+        // POST: api/Admin/KingLionSecLogin
         [HttpPost("[action]")]
-        public object Login([FromBody] AdminLoginDto data)
+        public object KingLionSecLogin([FromBody] AdminLoginDto data)
         {
             bool isLoginSuccess = Authentication.AuthenticateAdmin(data.UserID, data.Password);
             return new { LoginSuccess = isLoginSuccess };

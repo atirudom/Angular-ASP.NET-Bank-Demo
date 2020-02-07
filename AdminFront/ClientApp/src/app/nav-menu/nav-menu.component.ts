@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-nav-menu',
@@ -7,6 +8,16 @@ import { Component } from '@angular/core';
 })
 export class NavMenuComponent {
   isExpanded = false;
+  isLoggedInPage = false;
+
+  constructor(private route: ActivatedRoute) {
+  }
+
+  ngOnInit() {
+    if (location.pathname == '/secureKinglion/login' || location.pathname == '/') {
+      this.isLoggedInPage = true;
+    }
+  }
 
   collapse() {
     this.isExpanded = false;
