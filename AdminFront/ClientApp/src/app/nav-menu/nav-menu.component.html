@@ -4,21 +4,18 @@
   >
     <div class="container">
       <a class="navbar-brand" [routerLink]="['/']">AdminFront</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target=".navbar-collapse"
-        aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded"
-        (click)="toggle()"
-      >
+      <button class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              aria-label="Toggle navigation"
+              [attr.aria-expanded]="isExpanded"
+              (click)="toggle()">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div
-        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
-        [ngClass]="{ show: isExpanded }"
-      >
+      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
+           [ngClass]="{ show: isExpanded }"
+           *ngIf="!isLoggedInPage">
         <ul class="navbar-nav flex-grow">
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
@@ -29,6 +26,11 @@
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link text-dark" [routerLink]="['/all-users']">All Users</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" href="/">Logout</a>
           </li>
         </ul>
       </div>
