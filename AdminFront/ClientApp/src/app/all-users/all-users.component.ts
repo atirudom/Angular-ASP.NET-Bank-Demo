@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-all-users',
@@ -11,7 +12,7 @@ export class AllUsersComponent {
   public customers: Customer[];
 
   constructor(http: HttpClient, private _router: Router) {
-    http.get<Customer[]>("http://localhost:63637/" + 'api/customers').subscribe(result => {
+    http.get<Customer[]>(environment.adminApiUrl + 'api/customers').subscribe(result => {
       this.customers = result;
       console.log(this.customers)
     }, error => console.error(error));
