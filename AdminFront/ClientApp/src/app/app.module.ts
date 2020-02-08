@@ -11,6 +11,7 @@ import { AllUsersComponent } from './all-users/all-users.component';
 import { AdminActionsComponent } from './admin-actions/admin-actions.component';
 import { AdminEditCusComponent } from './admin-editcus/admin-editcus.component';
 import { ActionsAccountComponent } from './admin-actions-account/admin-actions-account.component';
+import { TransDataAnalysisComponent } from './trans-data-analysis/trans-data-analysis.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ActionsAccountComponent } from './admin-actions-account/admin-actions-a
     AllUsersComponent,
     AdminActionsComponent,
     AdminEditCusComponent,
-    ActionsAccountComponent
+    ActionsAccountComponent,
+    TransDataAnalysisComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -32,7 +34,8 @@ import { ActionsAccountComponent } from './admin-actions-account/admin-actions-a
       { path: 'all-users', component: AllUsersComponent },
       { path: 'admin-actions/:customerID', component: AdminActionsComponent },
       { path: 'admin-actions/:customerID/edit', component: AdminEditCusComponent },
-      { path: 'admin-actions/account/:accountNumber', component: ActionsAccountComponent }
+      { path: 'admin-actions/account/:accountNumber', component: ActionsAccountComponent },
+      { path: 'trans-data-analysis', component: TransDataAnalysisComponent }
     ])
   ],
   providers: [],
