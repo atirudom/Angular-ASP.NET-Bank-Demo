@@ -29,21 +29,25 @@ namespace AdminApi.Controllers
             return _repo.GetAll();
         }
 
-        // GET: api/Transactions/GetFromCustomer/5
-        [HttpPost("GetFromCustomer")]
-        public List<TransactionDateAns> GetFromCustomer([FromBody] RAnsTransactionReqFormDto bodyDto)
+        // POST: api/Transactions/GetAnsDailyData
+        [HttpPost("GetAnsDailyData")]
+        public List<TransactionDateAns> GetAnsDailyData([FromBody] RAnsTransactionReqFormDto bodyDto)
         {
-            TransactionAnalyzer transactionAnalyzer = new TransactionAnalyzer(_repo.GetAll().ToList());
-            var result = transactionAnalyzer.GenerateResults(bodyDto.FromDate, bodyDto.ToDate);
+            var allTransactions = bodyDto.CustomerID != null ?
+                _repo.GetFromCustomerID((int)bodyDto.CustomerID).ToList() : _repo.GetAll().ToList();
+            TransactionAnalyzer transactionAnalyzer = new TransactionAnalyzer(allTransactions);
+            var result = (List<TransactionDateAns>)transactionAnalyzer.GenerateResults(bodyDto.FromDate, bodyDto.ToDate, "dailyResult");
             return result;
         }
 
-        // GET: api/Transactions/GetFromCustomer/5
-        [HttpPost("GetFromCustomer/{customerID}")]
-        public List<TransactionDateAns> GetFromCustomer(int customerID, [FromBody] RAnsTransactionReqFormDto bodyDto)
+        // POST: api/Transactions/GetAnsDailyData
+        [HttpPost("GetAnsAmtType")]
+        public List<TransactionPerTypeAns> GetAnsAmtType([FromBody] RAnsTransactionReqFormDto bodyDto)
         {
-            TransactionAnalyzer transactionAnalyzer = new TransactionAnalyzer(_repo.GetFromCustomerID(customerID).ToList());
-            List<TransactionDateAns> result = transactionAnalyzer.GenerateResults(bodyDto.FromDate, bodyDto.ToDate);
+            var allTransactions = bodyDto.CustomerID != null ?
+                _repo.GetFromCustomerID((int)bodyDto.CustomerID).ToList() : _repo.GetAll().ToList();
+            TransactionAnalyzer transactionAnalyzer = new TransactionAnalyzer(allTransactions);
+            var result = (List<TransactionPerTypeAns>)transactionAnalyzer.GenerateResults(bodyDto.FromDate, bodyDto.ToDate, "amountPerType");
             return result;
         }
     }
