@@ -1,0 +1,32 @@
+<h1 id="tableLabel">Transaction Analysis</h1>
+
+<p *ngIf="!ansResult"><em>Loading...</em></p>
+<hr />
+
+<form [formGroup]="chartForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
+  <div class="form-group row">
+    <div class="col">
+      <label class=" control-label">Customer</label>
+      <input name="name" class="form-control" type="text" formControlName="customerID">
+    </div>
+    <div class="col">
+      <label class=" control-label">Customer</label>
+      <input type="date" class="form-control" formControlName="fromDate">
+    </div>
+    <div class="col">
+      <label class=" control-label">To Date</label>
+      <input type="date" name="address" class="form-control" formControlName="toDate">
+    </div>
+    <div class="col">
+      <label class=" control-label">Chart Type</label>
+      <input name="city" class="form-control" type="text" formControlName="chartType">
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-primary" style="margin-top: 32px;">Submit</button>
+    </div>
+  </div> 
+</form>
+
+<div class="container">
+  <canvas id="transactionChart"></canvas>
+</div>
