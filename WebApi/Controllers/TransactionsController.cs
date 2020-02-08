@@ -31,7 +31,7 @@ namespace AdminApi.Controllers
 
         // GET: api/Transactions/GetFromCustomer/5
         [HttpPost("GetFromCustomer")]
-        public object GetFromCustomer([FromBody] RAnsTransactionReqFormDto bodyDto)
+        public List<TransactionDateAns> GetFromCustomer([FromBody] RAnsTransactionReqFormDto bodyDto)
         {
             TransactionAnalyzer transactionAnalyzer = new TransactionAnalyzer(_repo.GetAll().ToList());
             var result = transactionAnalyzer.GenerateResults(bodyDto.FromDate, bodyDto.ToDate);
