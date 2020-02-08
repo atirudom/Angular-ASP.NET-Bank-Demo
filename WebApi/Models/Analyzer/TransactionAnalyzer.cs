@@ -34,7 +34,7 @@ namespace AdminApi.Models.Analyzer
             }
 
             int dayDiff = Convert.ToInt32((to - from).TotalDays);
-
+            dayDiff += 1; // For counting its own day
             return GenerateResults(from, dayDiff);
         }
 
