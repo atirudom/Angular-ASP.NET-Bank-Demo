@@ -19,10 +19,10 @@ namespace AdminApi.Models.Analyzer
             resultTransactionDateAns = new List<TransactionDateAns>();
         }
 
-        public List<TransactionDateAns> GenerateResults(DateTime from, DateTime to)
+        public object GenerateResults(DateTime from, DateTime to, string analyzeType)
         {
-            // if from is not set
-            if(from < ThresholdDate)
+            // if from is not set -> set to first transaction
+            if (from < ThresholdDate)
             {
                 var orderedTrans = _transactions.OrderBy(t => t.TransactionTimeUtc);
                 from = orderedTrans.ToList()[0].TransactionTimeUtc;
@@ -35,10 +35,30 @@ namespace AdminApi.Models.Analyzer
 
             int dayDiff = Convert.ToInt32((to - from).TotalDays);
             dayDiff += 1; // For counting its own day
-            return GenerateResults(from, dayDiff);
+            if (analyzeType == "dailyResult")
+                return GenerateDailyResults(from, dayDiff);
+            else
+                return GenerateAmountPerType(from, to);
         }
 
-        public List<TransactionDateAns> GenerateResults(DateTime from, int dayDiff)
+        public List<TransactionPerTypeAns> GenerateAmountPerType(DateTime from, DateTime to)
+        {
+            IEnumerable<Transaction> tmpTrans = _transactions.Where(t => t.TransactionTimeUtc.Date >= from && t.TransactionTimeUtc.Date <= to);
+            var result = new List<TransactionPerTypeAns>();
+            foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
+            {
+                decimal amountPerType = tmpTrans.Where(t => t.TransactionType == type).Sum(t => t.Amount);
+                result.Add(new TransactionPerTypeAns()
+                {
+                    TotalAmount = amountPerType,
+                    Type = type.ToString()
+                });
+            }
+
+            return result;
+        }
+
+        public List<TransactionDateAns> GenerateDailyResults(DateTime from, int dayDiff)
         {
             var result = new List<TransactionDateAns>(new TransactionDateAns[dayDiff]);
             var date = from;   // If outside of duration = get today
@@ -46,7 +66,7 @@ namespace AdminApi.Models.Analyzer
             {
                 IEnumerable<Transaction> tmpTrans = _transactions.Where(t => t.TransactionTimeUtc.Date == date.Date);
                 decimal totalAmount = 0;
-                foreach(var t in tmpTrans)
+                foreach (var t in tmpTrans)
                 {
                     totalAmount += t.Amount;
                 }
