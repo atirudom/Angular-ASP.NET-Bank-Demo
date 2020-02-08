@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from "jquery";
@@ -14,7 +14,7 @@ import * as moment from "moment";
 })
 export class TransDataAnalysisComponent {
   public url = { edit: '', back: '' };
-  public ansResult: TransactionDateAns;
+  public ansResult;
   public customerID: number;
   public fromDate: Date;
   public toDate: Date;
@@ -25,7 +25,8 @@ export class TransDataAnalysisComponent {
   customerDropdown: CustomerDropdown[];
   fromDateErrMessage: string;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private _fb: FormBuilder, private _router: Router) {
+  constructor(private http: HttpClient, private route: ActivatedRoute,
+    private _fb: FormBuilder, private _router: Router, private elementRef: ElementRef) {
     this.route.queryParams.subscribe(params => {
       this.customerID = parseInt(params['customerID']);
       this.fromDate = params['fromDate'];
@@ -46,7 +47,8 @@ export class TransDataAnalysisComponent {
         toDate: this.toDate
       }
 
-      http.post<TransactionDateAns>(environment.adminApiUrl + `api/transactions/GetFromCustomer/${this.customerID || ""}`, body,
+      let actionUrl = this.chartType == "amountPerType" ? "GetAnsAmtType" : "GetAnsDailyData"
+      http.post(environment.adminApiUrl + `api/transactions/${actionUrl}`, body,
         {
           headers: new HttpHeaders({
             'Content-Type': 'application/json'
@@ -72,6 +74,10 @@ export class TransDataAnalysisComponent {
     })
   }
 
+  ngOndestroy() {
+    this.elementRef.nativeElement.remove();
+  }
+
   save() {
     if (getErrorDateValidation(this.chartForm.value.fromDate, this.chartForm.value.toDate)) {
       return
@@ -89,6 +95,9 @@ export class TransDataAnalysisComponent {
     }
     console.log(location.pathname)
     console.log(queryParams)
+
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this._router.onSameUrlNavigation = 'reload';
     this._router.navigate(
       [location.pathname],
       {
@@ -97,20 +106,32 @@ export class TransDataAnalysisComponent {
 
       }
     )
+
+    //this._router.navigate(
+    //  [location.pathname],
+    //  {
+    //    //relativeTo: this.route,
+    //    queryParams: queryParams,
+
+    //  }
+    //)
   }
 
-  buildTransactionChart(transactionDates, chartType) {
+  buildTransactionChart(resultsAns, chartType) {
     var canvas = document.getElementById("transactionChart");
 
     switch (chartType) {
       case "transactionCount":
-        buildTransactionCountChart(transactionDates, canvas)
+        buildTransactionCountChart(resultsAns, canvas)
         break;
       case "totalAmount":
-        buildTransTotalAmountChart(transactionDates, canvas)
+        buildTransTotalAmountChart(resultsAns, canvas)
+        break;
+      case "amountPerType":
+        buildAmountPerTypeChart(resultsAns, canvas)
         break;
     }
-    
+
   }
 
 }
@@ -182,6 +203,32 @@ function buildTransTotalAmountChart(transactionDates, canvas) {
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1
       }]
+    }
+  });
+}
+
+function buildAmountPerTypeChart(resultsAns, canvas) {
+  const labels = [];
+  const data = [];
+  for (let r of resultsAns) {
+    labels.push(r.type);
+    data.push(r.totalAmount);
+  }
+
+  const transactionChart = new Chart(canvas, {
+    type: "doughnut",
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: [
+          "rgba(255, 99, 123, 0.8)",
+          "rgba(3, 99, 1, 0.8)",
+          "rgba(233, 123, 22, 0.8)",
+          "rgba(32, 123, 175, 0.8)",
+          "rgba(255, 5, 22, 0.8)"
+        ]
+      }],
     }
   });
 }
