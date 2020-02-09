@@ -17,10 +17,6 @@ export class AllUsersComponent {
       console.log(this.customers)
     }, error => console.error(error));
   }
-
-  onClickViewCustomer(data) {
-    //this._router.navigate(["/view-user"])
-  }
 }
 
 interface Login {
