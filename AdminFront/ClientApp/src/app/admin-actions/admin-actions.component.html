@@ -63,18 +63,18 @@
   </dl>
   <div style="margin-bottom: 7px" *ngIf="customer.login.status != 'Locked'">
       <button class="btn btn-danger" (click)="lockUser()">Lock User</button>
-      <span class="span_lock_newcss">The user will be locked within 1 minute.</span>
+      <span class="span_lock_newcss">The user will be locked for 1 minute.</span>
   </div>
   <div style="margin-bottom: 7px" *ngIf="customer.login.status == 'Locked'">
     <button class="btn btn-danger" (click)="unlockUser()">Unlock User</button>
-     <span class="span_lock_newcss">The user will be unlocked after 1 minute.</span>
+     <span class="span_lock_newcss">The user will be unlocked for 1 minute.</span>
   </div>
   <div>
     <a [routerLink]="[url.edit]">Edit</a> |
     <a [routerLink]="[url.back]">Back to all users</a>
   </div>
 
-<h4>Account table for user displayed as below:</h4>
+<h4>Customer Accounts</h4>
 
   <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="accounts">
     <thead>
@@ -89,7 +89,7 @@
       <tr *ngFor="let acc of accounts">
         <td>{{ acc.accountNumber }}</td>
         <td>{{ acc.accountType }}</td>
-        <td>{{ acc.balance }}</td>
+        <td>{{ acc.balance.toLocaleString(undefined, {maximumFractionDigits:2}) }}</td>
         <td>
           <div class="dropdown">
             <button class="btn btn-primary" (click)="viewBill(acc.accountNumber)">
@@ -102,7 +102,7 @@
   </table>
 
   <div *ngIf="billPays">
-      <h4>Bill Pays of the {{ selectedAccount }}:</h4>
+    <h4>Bill Pays - Account {{ selectedAccount }}</h4>
       <table class='table table-striped' aria-labelledby="tableLabel">
           <thead>
               <tr>
@@ -118,8 +118,8 @@
               <tr *ngFor="let bill of billPays">
                   <td>{{ bill.billPayID }}</td>
                   <td>{{ bill.accountNumber }}</td>
-                  <td>{{ bill.amount }}</td>
-                  <td>{{ bill.scheduleDate }}</td>
+                  <td>{{ bill.amount.toLocaleString(undefined, {maximumFractionDigits:2}) }}</td>
+                  <td>{{ bill.scheduleDateStr }}</td>
                   <td>{{ bill.status }}</td>
                   <td>
                       <button *ngIf="bill.status.toLowerCase() == 'normal'" class="btn btn-primary" (click)="blockBillPay(bill.billPayID)">
@@ -135,3 +135,4 @@
   </div>
 </div>
 
+<div style="padding-bottom: 400px"></div>

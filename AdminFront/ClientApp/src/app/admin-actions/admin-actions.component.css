@@ -3,14 +3,13 @@
   background: #f6f7f8;
 }
 h4 {
-  color: #1b6ec2;
-  font-weight: bold;
   line-height: 40px;
   margin-top: 2%;
 }
 .row {
   background: #f6f7f8;
   border-radius: 10px;
+  padding: 7px 0;
 }
 .table td, .table th {
   vertical-align: initial;
