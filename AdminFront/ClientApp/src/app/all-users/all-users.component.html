@@ -26,7 +26,8 @@
             Actions
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Transactions Stats</a>
+            <a class="dropdown-item" href="/trans-data-analysis?customerID={{ user.customerID }}">Transaction Analysis</a>
+            <a class="dropdown-item" href="/trans-history?customerID={{ user.customerID }}">Transactions History</a>
             <a class="dropdown-item" href="/admin-actions/{{ user.customerID }}">Admin Actions</a>
           </div>
         </div>
