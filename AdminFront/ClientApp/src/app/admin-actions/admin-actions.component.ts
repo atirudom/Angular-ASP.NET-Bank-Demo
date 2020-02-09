@@ -15,7 +15,7 @@ export class AdminActionsComponent {
   public accounts: Account[];
   public billPays: BillPay[];
   public customerID: string;
-  public selectedAccount: int;
+  public selectedAccount: number;
 
   constructor(http: HttpClient, private route: ActivatedRoute) {
     this.customerID = this.route.snapshot.paramMap.get('customerID');
@@ -124,5 +124,6 @@ interface BillPay {
   accountNumber: number;
   amount: number;
   scheduleDate: Date;
+  scheduleDateStr: string;
   status: string;
 }
