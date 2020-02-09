@@ -13,6 +13,7 @@ namespace AdminApi.Models.Dto
         public int PayeeID { get; set; }
         public decimal Amount { get; set; }
         public DateTime ScheduleDate { get; set; }
+        public string ScheduleDateStr { get; set; }
         public string Period { get; set; }
         public string Status { get; set; }
         public string StatusMessage { get; set; }
@@ -28,13 +29,17 @@ namespace AdminApi.Models.Dto
             AccountNumber = bill.AccountNumber;
             PayeeID = bill.PayeeID;
             Amount = bill.Amount;
-            ScheduleDate = bill.ScheduleDate;
+            //ScheduleDate = bill.ScheduleDate;
             Period = bill.Period.ToString();
             Status = bill.Status.ToString();
             StatusMessage = bill.StatusMessage;
             LastPaymentTime = bill.LastPaymentTime;
             ModifyDate = bill.ModifyDate;
             BillPay = bill;
+
+            DateTime newDate = DateTime.SpecifyKind(bill.ScheduleDate, DateTimeKind.Utc);
+            ScheduleDate = newDate.ToLocalTime();
+            ScheduleDateStr = newDate.ToLocalTime().ToString("dd/MM/yyyy hh:mm:ss tt");
         }
     }
 }

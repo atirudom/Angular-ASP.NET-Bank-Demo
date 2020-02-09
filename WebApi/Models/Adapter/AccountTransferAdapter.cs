@@ -27,7 +27,7 @@ namespace AdminApi.Models.Adapter
         }
 
         // Transfer between accounts set in this adapter
-        private void Transfer(decimal amount)
+        private void Transfer(decimal amount, DateTime dateTime)
         {
             if (amount <= 0) throw new BusinessRulesException("Amount cannot be lower than 0!");
 
@@ -44,7 +44,7 @@ namespace AdminApi.Models.Adapter
             // apply incurred fee and generate its transaction to root account
             if (serviceFee != 0)
             {
-                Transaction feeTransaction = TransactionFactory.GenerateTransaction(RootAccount.AccountNumber, TransactionType.ServiceCharge, serviceFee);
+                Transaction feeTransaction = TransactionFactory.GenerateTransactionWithSpecTime(RootAccount.AccountNumber, null, TransactionType.ServiceCharge, serviceFee, null, dateTime);
                 RootAccount.Transactions.Add(feeTransaction);
             }
 
@@ -79,9 +79,14 @@ namespace AdminApi.Models.Adapter
             Transaction = TransactionFactory.GenerateTransaction(RootAccount.AccountNumber, DestinationAccount.AccountNumber, TransactionType.Transfer, amount, comment);
         }
 
+        internal void TransferTransactionWithSpecTime(decimal amount, string comment, DateTime dateTime)
+        {
+            Transaction = TransactionFactory.GenerateTransactionWithSpecTime(RootAccount.AccountNumber, DestinationAccount.AccountNumber, TransactionType.Transfer, amount, comment, dateTime);
+        }
+
         internal void ExecuteTransferTransaction()
         {
-            Transfer(Transaction.Amount);
+            Transfer(Transaction.Amount, Transaction.TransactionTimeUtc);
         }
     }
 }
