@@ -5,6 +5,7 @@ Assignment #3: ASP.NET Core App and Angular Website
 The enslaved (team) members responsible for the delivery of the project are as follows:
 - Atirach Intaraudom (s3750202) - @atirudom
 - Jiahui Li (s3614541) - @CatnisLee
+- Group number:Assignment3-group22
 
 ## Git Strategies
 ### Branching
