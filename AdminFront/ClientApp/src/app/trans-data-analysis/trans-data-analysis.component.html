@@ -47,6 +47,14 @@
   </div>
 </form>
 
+<div *ngIf="totalCount">
+  Found <b>{{ totalCount.toLocaleString() }}</b> transactions <span *ngIf="numOfDays">in the period of <b>{{ numOfDays.toLocaleString() }}</b> days</span>
+</div>
+
+<div *ngIf="totalAmount">
+  Found total amount of <b>${{ totalAmount.toLocaleString(undefined, {maximumFractionDigits:2}) }}</b> from transactions <span *ngIf="numOfDays">in the period of <b>{{ numOfDays.toLocaleString() }}</b> days</span>
+</div>
+
 <div class="container">
   <canvas id="transactionChart"></canvas>
 </div>
