@@ -45,7 +45,7 @@ namespace AdminApi.Models.DataManager
         public IEnumerable<Transaction> GetFromCustomerID(int customerID)
         {
             var allCusAccounts = _context.Customers.FindAsync(customerID).Result.Accounts;
-            IEnumerable<Transaction> transactions = _context.Transactions.Where(tran => tran.Account.CustomerID == customerID);
+            IEnumerable<Transaction> transactions = _context.Transactions.Where(tran => tran.Account.CustomerID == customerID || tran.DestinationAccount.CustomerID == customerID);
             return transactions;
         }
 

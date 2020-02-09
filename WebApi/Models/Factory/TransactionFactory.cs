@@ -32,5 +32,20 @@ namespace AdminApi.Models.Factory
             };
             return transaction;
         }
+
+        // Generate transaction between 2 accounts with comments
+        public static Transaction GenerateTransactionWithSpecTime(int accountNumber, int? destinationAccountNumber, TransactionType type, decimal amount, string comment, DateTime dateTime)
+        {
+            Transaction transaction = new Transaction()
+            {
+                AccountNumber = accountNumber,
+                TransactionType = type,
+                DestinationAccountNumber = destinationAccountNumber,
+                Amount = amount,
+                Comment = comment,
+                TransactionTimeUtc = dateTime
+            };
+            return transaction;
+        }
     }
 }

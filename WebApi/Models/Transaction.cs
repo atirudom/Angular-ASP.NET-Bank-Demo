@@ -6,11 +6,11 @@ namespace AdminApi.Models
 {
     public enum TransactionType
     {
-        Deposit = 'D',
-        Withdraw = 'W',
-        Transfer = 'T',
-        ServiceCharge = 'S',
-        BillPay = 'B'
+        Deposit = 1,
+        Withdraw = 2,
+        Transfer = 3,
+        ServiceCharge = 4,
+        BillPay = 5
     }
 
     public class Transaction
