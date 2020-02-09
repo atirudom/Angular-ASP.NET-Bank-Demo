@@ -46,7 +46,7 @@ namespace AdminApi
                 builder =>
                 {
                     builder.WithOrigins("https://localhost:44349").AllowAnyHeader().AllowAnyMethod();
-                    builder.AllowAnyOrigin();
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 }));
 
             services.AddControllers();

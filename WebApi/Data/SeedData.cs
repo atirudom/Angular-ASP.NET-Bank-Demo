@@ -55,21 +55,24 @@ namespace AdminApi.Data
                     UserID = "12345678",
                     CustomerID = 2100,
                     PasswordHash = "YBNbEL4Lk8yMEWxiKkGBeoILHTU7WZ9n8jJSy8TNx0DAzNEFVsIVNRktiQV+I8d2",
-                    ModifyDate = now
+                    ModifyDate = now,
+                    Status = LoginStatus.Normal
                 },
                 new Login
                 {
                     UserID = "38074569",
                     CustomerID = 2200,
                     PasswordHash = "EehwB3qMkWImf/fQPlhcka6pBMZBLlPWyiDW6NLkAh4ZFu2KNDQKONxElNsg7V04",
-                    ModifyDate = now
+                    ModifyDate = now,
+                    Status = LoginStatus.Normal
                 },
                 new Login
                 {
                     UserID = "17963428",
                     CustomerID = 2300,
                     PasswordHash = "LuiVJWbY4A3y1SilhMU5P00K54cGEvClx5Y+xWHq7VpyIUe5fe7m+WeI0iwid7GE",
-                    ModifyDate = now
+                    ModifyDate = now,
+                    Status = LoginStatus.Normal
                 });
 
             context.Accounts.AddRange(
@@ -77,21 +80,21 @@ namespace AdminApi.Data
                 {
                     AccountType = AccountType.Saving,
                     CustomerID = 2100,
-                    Balance = 0,
+                    Balance = 90000,
                     ModifyDate = now
                 },
                 new Account
                 {
                     AccountType = AccountType.Checking,
                     CustomerID = 2100,
-                    Balance = 0,
+                    Balance = 90000,
                     ModifyDate = now
                 },
                 new Account
                 {
                     AccountType = AccountType.Saving,
                     CustomerID = 2200,
-                    Balance = 0,
+                    Balance = 90000,
                     ModifyDate = now
                 },
                 new Account
@@ -124,6 +127,81 @@ namespace AdminApi.Data
             );
             context.SaveChanges();
             InitTransactions(serviceProvider);
+            RandomTransactions(serviceProvider);
+        }
+
+        private static void RandomTransactions(IServiceProvider serviceProvider)
+        {
+            var context = new MainContext(serviceProvider.GetRequiredService<DbContextOptions<MainContext>>());
+            List<Account> accounts = context.Accounts.ToListAsync().Result;
+            int fallbackDays = 30;
+            var date = DateTime.Today.AddDays(-fallbackDays);
+
+            //for each day
+            for (var i = 0; i < fallbackDays; i++, date = date.AddDays(1))
+            {
+                int numOfTransactions = 4;
+                foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
+                {
+                    RandomTransactionInType(accounts, type, date, numOfTransactions);
+                    context.SaveChanges();
+                }
+            }
+        }
+
+        private static void RandomTransactionInType(List<Account> accounts, TransactionType type, DateTime dateTime, int numOfTransactions)
+        {
+            var random = new Random();
+
+            // for each account
+            foreach (var acc in accounts)
+            {
+                AccountAdapter accountAdapter = new AccountAdapter(acc);
+                switch (type)
+                {
+                    case TransactionType.Deposit:
+                        RandomDeposit();
+                        break;
+                    case TransactionType.Withdraw:
+                        RandomWithdraw();
+                        break;
+                    case TransactionType.Transfer:
+                        RandomTransfer();
+                        break;
+                }
+
+                void RandomDeposit()
+                {
+                    for (int i = 0; i < numOfTransactions; i++)
+                    {
+                        accountAdapter.DepositWithSpecTime(random.Next(20, 1000), null, dateTime);
+                    }
+                }
+                void RandomWithdraw()
+                {
+                    for (int i = 0; i < numOfTransactions; i++)
+                    {
+                        accountAdapter.WithdrawWithSpecTime(random.Next(20, 500), dateTime);
+                    }
+                }
+                void RandomTransfer()
+                {
+                    for (int i = 0; i < numOfTransactions; i++)
+                    {
+                        try
+                        {
+                            AccountTransferAdapter accTransferAdapter =
+                            new AccountTransferAdapter(acc, accounts[random.Next(0, accounts.Count)]);
+                            accTransferAdapter.TransferTransactionWithSpecTime(random.Next(10, 800), null, dateTime);
+                            accTransferAdapter.ExecuteTransferTransaction();
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
         }
 
         private static void InitTransactions(IServiceProvider serviceProvider)
@@ -132,7 +210,7 @@ namespace AdminApi.Data
 
             // Initial Deposit
 
-            string comment = "Initial deposit";
+            string comment = "";
             List<Account> accounts = context.Accounts.ToListAsync().Result;
             AccountAdapter accountAdapter = new AccountAdapter(accounts[0]);
             accountAdapter.Deposit(100, comment);

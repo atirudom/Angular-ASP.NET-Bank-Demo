@@ -21,17 +21,8 @@ namespace AdminApi.Models.Analyzer
 
         public object GenerateResults(DateTime from, DateTime to, string analyzeType)
         {
-            // if from is not set -> set to first transaction
-            if (from < ThresholdDate)
-            {
-                var orderedTrans = _transactions.OrderBy(t => t.TransactionTimeUtc);
-                from = orderedTrans.ToList()[0].TransactionTimeUtc;
-            }
-            // if to is not set
-            if (to < ThresholdDate)
-            {
-                to = DateTime.UtcNow;
-            }
+            from = GetFromDate(from);
+            to = GetToDate(from, to);
 
             int dayDiff = Convert.ToInt32((to - from).TotalDays);
             dayDiff += 1; // For counting its own day
@@ -41,12 +32,41 @@ namespace AdminApi.Models.Analyzer
                 return GenerateAmountPerType(from, to);
         }
 
+        public DateTime GetFromDate(DateTime from)
+        {
+            // if from is not set -> set to first transaction
+            if (from < ThresholdDate)
+            {
+                var orderedTrans = _transactions.OrderBy(t => t.TransactionTimeUtc);
+                from = new DateTime(orderedTrans.ToList()[0].TransactionTimeUtc.Ticks);
+            }
+            return from;
+        }
+
+        public DateTime GetToDate(DateTime from, DateTime to)
+        {
+            if (to < ThresholdDate)
+            {
+                to = DateTime.UtcNow;
+            }
+            return to;
+        }
+
+        public IEnumerable<Transaction> GetTransactionsBetween(DateTime from, DateTime to)
+        {
+            DateTime newFrom = GetFromDate(from);
+            DateTime newTo = GetToDate(from, to);
+            var result = _transactions.Where(t => t.TransactionTimeUtc.Date >= newFrom.Date && t.TransactionTimeUtc.Date <= newTo.Date);
+            return result;
+        }
+
         public List<TransactionPerTypeAns> GenerateAmountPerType(DateTime from, DateTime to)
         {
-            IEnumerable<Transaction> tmpTrans = _transactions.Where(t => t.TransactionTimeUtc.Date >= from && t.TransactionTimeUtc.Date <= to);
+            IEnumerable<Transaction> tmpTrans = GetTransactionsBetween(from, to);
             var result = new List<TransactionPerTypeAns>();
             foreach (TransactionType type in Enum.GetValues(typeof(TransactionType)))
             {
+                if (type == TransactionType.BillPay) continue;
                 decimal amountPerType = tmpTrans.Where(t => t.TransactionType == type).Sum(t => t.Amount);
                 result.Add(new TransactionPerTypeAns()
                 {
