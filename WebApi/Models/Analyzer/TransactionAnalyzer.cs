@@ -56,7 +56,10 @@ namespace AdminApi.Models.Analyzer
         {
             DateTime newFrom = GetFromDate(from);
             DateTime newTo = GetToDate(from, to);
-            var result = _transactions.Where(t => t.TransactionTimeUtc.Date >= newFrom.Date && t.TransactionTimeUtc.Date <= newTo.Date);
+            var result = _transactions
+                .Where(t => t.TransactionTimeUtc.Date >= newFrom.Date && t.TransactionTimeUtc.Date <= newTo.Date)
+                .OrderByDescending(t => t.TransactionTimeUtc);
+
             return result;
         }
 
