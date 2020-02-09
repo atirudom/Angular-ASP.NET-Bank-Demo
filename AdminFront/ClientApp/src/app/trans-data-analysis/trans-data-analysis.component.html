@@ -1,6 +1,5 @@
 <h1 id="tableLabel">Transaction Analysis</h1>
 
-<p *ngIf="!ansResult"><em>Loading...</em></p>
 <hr />
 
 <form [formGroup]="chartForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
@@ -46,7 +45,7 @@
     </div>
   </div>
 </form>
-
+<p *ngIf="!ansResult"><em>Loading...</em></p>
 <div *ngIf="totalCount">
   Found <b>{{ totalCount.toLocaleString() }}</b> transactions <span *ngIf="numOfDays">in the period of <b>{{ numOfDays.toLocaleString() }}</b> days</span>
 </div>

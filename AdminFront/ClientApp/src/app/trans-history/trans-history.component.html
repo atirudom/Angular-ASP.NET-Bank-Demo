@@ -1,6 +1,4 @@
 <h1 id="tableLabel">Transaction History</h1>
-
-<p *ngIf="!ansResult"><em>Loading...</em></p>
 <hr />
 
 <form [formGroup]="chartForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
@@ -33,8 +31,14 @@
   </div>
 </form>
 
-<div *ngIf="totalCount" style="margin-bottom: 10px">
+<p *ngIf="!resultTransaction"><em>Loading...</em></p>
+
+<div *ngIf="totalCount" style="margin-bottom: 10px; margin-top: 7px; float: left;">
   Found total amount of <b>${{ totalAmount.toLocaleString(undefined, {maximumFractionDigits:2}) }}</b> from <b>{{ totalCount.toLocaleString() }}</b> transactions <span *ngIf="numOfDays">in the period of <b>{{ numOfDays }}</b> days</span>
+</div>
+<div style="float: right; display: flex; align-items: baseline; justify-content: flex-end">
+  <span style="margin-right: 10px; font-size: 0.9em;">Showing {{pageSize}} transactions per page</span>
+  <ngb-pagination [collectionSize]="resultTransaction?.length" [(page)]="page" [maxSize]="5" [pageSize]="pageSize"></ngb-pagination>
 </div>
 
 <div>
@@ -50,7 +54,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let tran of resultTransaction">
+      <tr *ngFor="let tran of resultTransaction | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
         <td>{{ tran.transactionID }}</td>
         <td>{{ tran.accountNumber }}</td>
         <td>{{ tran.destinationAccountNumber }}</td>

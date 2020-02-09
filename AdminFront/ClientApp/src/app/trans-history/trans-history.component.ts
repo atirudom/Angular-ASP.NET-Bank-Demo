@@ -26,6 +26,9 @@ export class TransHistoryComponent {
   customerDropdown: CustomerDropdown[];
   fromDateErrMessage: string;
 
+  page = 1;
+  pageSize = 50;
+
   constructor(private http: HttpClient, private route: ActivatedRoute,
     private _fb: FormBuilder, private _router: Router, private elementRef: ElementRef) {
     this.route.queryParams.subscribe(params => {
@@ -93,8 +96,8 @@ export class TransHistoryComponent {
 
     const queryParams = {
       customerID: this.chartForm.value.customerID,
-      fromDate: this.chartForm.value.fromDate,
-      toDate: this.chartForm.value.toDate,
+      fromDate: this.chartForm.value.fromDate == "" ? null : this.chartForm.value.fromDate,
+      toDate: this.chartForm.value.toDate == "" ? null : this.chartForm.value.toDate,
       chartType: this.chartForm.value.chartType,
     }
     console.log(location.pathname)
