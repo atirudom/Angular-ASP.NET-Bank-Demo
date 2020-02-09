@@ -12,7 +12,8 @@ import { environment } from '../../environments/environment'
 })
 export class AdminEditCusComponent {
   customerForm: FormGroup;
-  sendSuccess = false;
+  sendSuccess;
+  errorMessages = [];
 
   public url = { edit: '', back: '' };
   public customer: Customer;
@@ -45,6 +46,7 @@ export class AdminEditCusComponent {
   }
 
   save() {
+    this.errorMessages = [];
     if (!this.customerForm.valid) {
       return;
     }
@@ -59,7 +61,14 @@ export class AdminEditCusComponent {
           this._router.navigate([this.url.back]);
         } else {
           this.sendSuccess = false;
+          for (var errList of data.errors) {
+            for (var errKey of errList.errors) {
+              this.errorMessages.push(errKey.errorMessage)
+            }
+          }
         }
+
+        console.log(this.errorMessages)
       }
     })
   }

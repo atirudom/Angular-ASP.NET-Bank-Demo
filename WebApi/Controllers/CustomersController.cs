@@ -59,7 +59,19 @@ namespace AdminApi.Controllers
             {
                 return BadRequest();
             }
-            _repo.Update(id, customer);
+
+            if (TryValidateModel(customer))
+            {
+                _repo.Update(id, customer);
+            }
+            else
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors })
+                    .ToArray();
+                return new { success = false, errors };
+            }
 
             return new { success = true };
         }
