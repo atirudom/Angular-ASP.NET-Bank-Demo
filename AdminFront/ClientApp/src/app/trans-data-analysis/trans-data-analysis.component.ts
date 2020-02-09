@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, AbstractControl } from '@angular/forms';
 
 import { Chart } from "chart.js";
 import * as moment from "moment";
+import { getDayDiff } from '../trans-history/trans-history.component';
 
 @Component({
   selector: 'app-trans-data-analysis',
@@ -18,8 +19,11 @@ export class TransDataAnalysisComponent {
   public customerID: number;
   public fromDate: Date;
   public toDate: Date;
-  //public chartType: string;
   public chartType: string;
+
+  public totalAmount = 0;
+  public totalCount = 0;
+  public numOfDays = 0;
 
   chartForm: FormGroup;
   customerDropdown: CustomerDropdown[];
@@ -32,6 +36,8 @@ export class TransDataAnalysisComponent {
       this.fromDate = params['fromDate'];
       this.toDate = params['toDate'];
       this.chartType = params['chartType'] || "transactionCount";
+
+      this.numOfDays = getDayDiff(this.fromDate, this.toDate)
 
       // Create Form
       this.chartForm = this._fb.group({
@@ -89,8 +95,8 @@ export class TransDataAnalysisComponent {
 
     const queryParams = {
       customerID: this.chartForm.value.customerID,
-      fromDate: this.chartForm.value.fromDate,
-      toDate: this.chartForm.value.toDate,
+      fromDate: this.chartForm.value.fromDate == "" ? null : this.chartForm.value.fromDate,
+      toDate: this.chartForm.value.toDate == "" ? null : this.chartForm.value.toDate,
       chartType: this.chartForm.value.chartType,
     }
     console.log(location.pathname)
@@ -106,15 +112,6 @@ export class TransDataAnalysisComponent {
 
       }
     )
-
-    //this._router.navigate(
-    //  [location.pathname],
-    //  {
-    //    //relativeTo: this.route,
-    //    queryParams: queryParams,
-
-    //  }
-    //)
   }
 
   buildTransactionChart(resultsAns, chartType) {
@@ -123,15 +120,24 @@ export class TransDataAnalysisComponent {
     switch (chartType) {
       case "transactionCount":
         buildTransactionCountChart(resultsAns, canvas)
+        resultsAns.forEach(t => {
+          this.totalCount += t.transactionCount
+        })
         break;
       case "totalAmount":
         buildTransTotalAmountChart(resultsAns, canvas)
+        resultsAns.forEach(t => {
+          this.totalAmount += t.totalAmount
+        })
         break;
       case "amountPerType":
         buildAmountPerTypeChart(resultsAns, canvas)
+        resultsAns.forEach(t => {
+          this.totalAmount += t.totalAmount
+        })
         break;
     }
-
+    console.log(this.totalAmount)
   }
 
 }
@@ -222,11 +228,11 @@ function buildAmountPerTypeChart(resultsAns, canvas) {
       datasets: [{
         data: data,
         backgroundColor: [
-          "rgba(255, 99, 123, 0.8)",
+          "rgba(123, 99, 123, 0.8)",
           "rgba(3, 99, 1, 0.8)",
           "rgba(233, 123, 22, 0.8)",
           "rgba(32, 123, 175, 0.8)",
-          "rgba(255, 5, 22, 0.8)"
+          //"rgba(255, 192, 203, 0.8)"
         ]
       }],
     }
@@ -234,11 +240,15 @@ function buildAmountPerTypeChart(resultsAns, canvas) {
 }
 
 function getErrorDateValidation(fromDate, toDate) {
+  if (!fromDate || !toDate) {
+    return
+  }
   var diff = moment(fromDate).diff(moment(toDate) || moment())
   var isFromBeforeTo = diff <= 0 ? true : false
   const errMsg = isFromBeforeTo ? null : "Starting Date must be before End Date"
   return errMsg
 }
+
 
 interface TransactionDateAns {
   date: string;
