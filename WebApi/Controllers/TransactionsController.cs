@@ -29,6 +29,25 @@ namespace AdminApi.Controllers
             return _repo.GetAll();
         }
 
+        [HttpPost("GetSpecific")]
+        public List<TransactionDto> GetSpecific([FromBody] RAnsTransactionReqFormDto bodyDto)
+        {
+            var allTransactions = bodyDto.CustomerID != null ?
+                _repo.GetFromCustomerID((int)bodyDto.CustomerID).ToList() : _repo.GetAll().ToList();
+
+            var tranAnalyzer = new TransactionAnalyzer(allTransactions);
+            var specTransactions = tranAnalyzer.GetTransactionsBetween(bodyDto.FromDate, bodyDto.ToDate).ToList();
+
+            var result = new List<TransactionDto>();
+            foreach (var tran in specTransactions)
+            {
+                TransactionDto tranDto = new TransactionDto(tran);
+                result.Add(tranDto);
+            }
+
+            return result;
+        }
+
         // POST: api/Transactions/GetAnsDailyData
         [HttpPost("GetAnsDailyData")]
         public List<TransactionDateAns> GetAnsDailyData([FromBody] RAnsTransactionReqFormDto bodyDto)
@@ -40,7 +59,7 @@ namespace AdminApi.Controllers
             return result;
         }
 
-        // POST: api/Transactions/GetAnsDailyData
+        // POST: api/Transactions/GetAnsAmtType
         [HttpPost("GetAnsAmtType")]
         public List<TransactionPerTypeAns> GetAnsAmtType([FromBody] RAnsTransactionReqFormDto bodyDto)
         {
