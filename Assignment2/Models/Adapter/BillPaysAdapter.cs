@@ -76,7 +76,7 @@ namespace Assignment2.Models.Adapter
             });
         }
 
-        private bool PayNow(BillPay billPay)
+        public bool PayNow(BillPay billPay)
         {
             try
             {
