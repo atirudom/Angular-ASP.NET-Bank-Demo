@@ -1,9 +1,9 @@
-<header>
+<header *ngIf="!isLoggedInPage">
   <nav
     class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
   >
     <div class="container">
-      <a class="navbar-brand" [routerLink]="['/']">AdminFront</a>
+      <a class="navbar-brand" [routerLink]="['all-users']">AdminFront</a>
       <button class="navbar-toggler"
               type="button"
               data-toggle="collapse"
@@ -20,7 +20,12 @@
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/trans-data-analysis']">Transaction Graph</a>
+            <a class="nav-link text-dark" [routerLink]="['/trans-history']">Transaction History</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/trans-data-analysis']">Transaction Analysis</a>
           </li>
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
