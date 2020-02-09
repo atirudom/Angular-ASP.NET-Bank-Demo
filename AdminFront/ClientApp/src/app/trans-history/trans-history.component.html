@@ -1,0 +1,64 @@
+<h1 id="tableLabel">Transaction History</h1>
+
+<p *ngIf="!ansResult"><em>Loading...</em></p>
+<hr />
+
+<form [formGroup]="chartForm" (ngSubmit)="save()" #formDir="ngForm" novalidate>
+  <div class="form-group row">
+    <div class="col">
+      <label class=" control-label">Customer</label>
+      <select class="form-control" formControlName="customerID">
+        <option [ngValue]="null">
+          All
+        </option>
+        <option *ngFor="let cus of customerDropdown" [ngValue]="cus.customerID">
+          {{ cus.customerID }} ( {{ cus.name }} )
+        </option>
+      </select>
+    </div>
+    <div class="col">
+      <label class=" control-label">From Date</label>
+      <input type="date" class="form-control" formControlName="fromDate" [max]="chartForm.value.toDate">
+      <div *ngIf="fromDateErrMessage" class="text-danger">
+        {{ fromDateErrMessage }}
+      </div>
+    </div>
+    <div class="col">
+      <label class=" control-label">To Date</label>
+      <input type="date" name="address" class="form-control" formControlName="toDate" [min]="chartForm.value.fromDate">
+    </div>
+    <div class="col">
+      <button type="submit" class="btn btn-primary" style="margin-top: 32px;">Submit</button>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="totalCount" style="margin-bottom: 10px">
+  Found total amount of <b>${{ totalAmount.toLocaleString(undefined, {maximumFractionDigits:2}) }}</b> from <b>{{ totalCount.toLocaleString() }}</b> transactions <span *ngIf="numOfDays">in the period of <b>{{ numOfDays }}</b> days</span>
+</div>
+
+<div>
+  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="resultTransaction">
+    <thead>
+      <tr>
+        <th>Transaction ID</th>
+        <th>Account number</th>
+        <th>Transfer to</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tran of resultTransaction">
+        <td>{{ tran.transactionID }}</td>
+        <td>{{ tran.accountNumber }}</td>
+        <td>{{ tran.destinationAccountNumber }}</td>
+        <td>{{ tran.transactionType }}</td>
+        <td>{{ tran.amount.toLocaleString(undefined, {maximumFractionDigits:2}) }}</td>
+        <td>{{ tran.transactionTimeStr }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
