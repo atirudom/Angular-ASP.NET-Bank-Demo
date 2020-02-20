@@ -1,3 +1,6 @@
+# Final Result
+Full marks received.
+
 # RMIT Course: Web Development Technologies
 Assignment #3: ASP.NET Core App and Angular Website
 
