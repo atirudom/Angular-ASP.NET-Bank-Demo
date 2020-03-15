@@ -1,11 +1,12 @@
 # Final Result
-Full marks received.
-- All tasks were implemented and successfully tested.
-- Multiple OO design patterns were implemented and optimised.
-- Angular framework used in the client app, ASP.NET with Entity Framework (EF) in the server app, .NET MVC app in customer site.
+Full marks received in all parts.
+- All tasks were correctly implemented and successfully tested.
+- Multiple OO design patterns were correctly implemented and optimised.
+- Angular framework used in the admin client app, ASP.NET with Entity Framework (EF) implemented in the server app
+- .NET MVC with EF used in the customer website app.
 
 # RMIT Course: Web Development Technologies
-Assignment #3: ASP.NET Core App and Angular Website
+Final Assignment #3: ASP.NET Core App and Angular Website
 
 ## Members
 The enslaved (team) members responsible for the delivery of the project are as follows:
