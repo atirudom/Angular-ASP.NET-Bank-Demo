@@ -27,7 +27,7 @@
     "bootstrap": "^4.3.1",
     "chart.js": "^2.9.3",
     "core-js": "^3.3.3",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "moment": "^2.24.0",
     "oidc-client": "^1.9.1",
     "popper.js": "^1.16.0",
